@@ -1,6 +1,9 @@
 # Compiled output
 dist
 
+# Files with secrets
+*.prod.json
+
 # Logs
 logs
 *.log

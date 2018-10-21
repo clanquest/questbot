@@ -4,6 +4,11 @@ export interface IBotConfig {
   game?: string
 }
 
+export interface IWebhookConfig {
+  id: string
+  token: string
+}
+
 export interface ILoggerMethod {
   (msg: string, ...args: any[]): void
   (obj: object, msg?: string, ...args: any[]): void
