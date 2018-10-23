@@ -1,28 +1,28 @@
-import * as Discord from 'discord.js';
-import { IBotConfig, ILogger } from '../api';
+import * as Discord from "discord.js";
+import { IBotConfig, ILogger } from "../api";
 
 export class QuestBot {
-  private _cfg: IBotConfig
-  private _logger: ILogger;
+  private cfg: IBotConfig;
+  private logger: ILogger;
 
-  private _client?: Discord.Client
+  private client?: Discord.Client;
 
   constructor(cfg: IBotConfig, logger: ILogger) {
-    this._cfg = cfg
-    this._logger = logger;
+    this.cfg = cfg;
+    this.logger = logger;
   }
-  
-  start(): void {
-    this._client = new Discord.Client();
 
-    this._client.on('ready', () => {
-      if (this._cfg.game) {
-          this._client!.user.setGame(this._cfg.game)
+  public start(): void {
+    this.client = new Discord.Client();
+
+    this.client.on("ready", () => {
+      if (this.cfg.game) {
+          this.client!.user.setGame(this.cfg.game);
       }
-      this._client!.user.setStatus('online')
-      this._logger.info('started...')
-    })
+      this.client!.user.setStatus("online");
+      this.logger.info("started...");
+    });
 
-    this._client.login(this._cfg.token)
+    this.client.login(this.cfg.token);
   }
 }

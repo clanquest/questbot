@@ -1,17 +1,17 @@
-import * as Discord from 'discord.js';
-import { ILogger, IWebhookConfig } from '../api';
+import * as Discord from "discord.js";
+import { ILogger, IWebhookConfig } from "../api";
 
 export class DiscordWebhook {
-  private _hook: Discord.WebhookClient;
+  private hook: Discord.WebhookClient;
 
   constructor(cfg: IWebhookConfig, logger: ILogger) {
-    this._hook = new Discord.WebhookClient(cfg.id, cfg.token);
+    this.hook = new Discord.WebhookClient(cfg.id, cfg.token);
   }
-  
-  send(
+
+  public send(
       content: Discord.StringResolvable,
       options?: Discord.WebhookMessageOptions|Discord.Attachment|Discord.RichEmbed)
-      : Promise<(Discord.Message|Array<Discord.Message>|Object|Array<Object>)> {
-    return this._hook.send(content, options);
+      : Promise<(Discord.Message|Discord.Message[]|object|object[])> {
+    return this.hook.send(content, options);
   }
 }
