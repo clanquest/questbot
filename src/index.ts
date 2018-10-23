@@ -1,5 +1,5 @@
 import { IBotConfig, ILogger, IWebhookConfig } from './api'
-import { QuestBot } from './QuestBot'
+import { QuestBot } from './bot/QuestBot'
 import { DiscordWebhook } from './webhooks/DiscordWebhook';
 
 const logger: ILogger = console

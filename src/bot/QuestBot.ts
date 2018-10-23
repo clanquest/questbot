@@ -1,5 +1,5 @@
 import * as Discord from 'discord.js';
-import { IBotConfig, ILogger } from './api';
+import { IBotConfig, ILogger } from '../api';
 
 export class QuestBot {
   private _cfg: IBotConfig
