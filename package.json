@@ -4,6 +4,7 @@
   "description": "Clan Quest Discord Bot",
   "main": "dist/index.js",
   "scripts": {
+    "lint": "node_modules/.bin/tslint -p tsconfig.json",
     "watch": "node_modules/.bin/tsc -w",
     "build": "node_modules/.bin/tsc",
     "start": "node dist/index.js"
