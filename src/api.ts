@@ -6,6 +6,12 @@ export interface IBotConfig {
   game?: string;
 }
 
+export interface IBotCommand {
+  name: string;
+  helpText?: string;
+  execute(message: Discord.Message): void;
+}
+
 export interface IWebhookConfig {
   id: string;
   token: string;
