@@ -1,48 +1,27 @@
-import { IBotConfig, ILogger, IWebhookConfig } from "./api";
-import { QuestBot } from "./bot/QuestBot";
-import { DiscordWebhook } from "./webhooks/DiscordWebhook";
+import * as Program from "commander";
+import { ILogger } from "./api";
+import { runBot, sendHook } from "./commands";
 
-const logger: ILogger = console;
+Program
+    .version("0.1");
 
-class Program {
-  public static runBot() {
-    let cfg = require("./../bot.json") as IBotConfig;
-    try {
-      const cfgProd = require("./../bot.prod.json") as IBotConfig;
-      cfg = { ...cfg, ...cfgProd };
-    } catch {
-      logger.info("Create a 'bot.prod.json' file to use actual settings for the bot.");
-    }
-    const bot = new QuestBot(cfg, logger);
-    bot.start();
-  }
+Program
+    .command("runBot")
+    .alias("bot")
+    .alias("b")
+    .description("Run QuestBot")
+    .action(runBot);
 
-  public static sendHook() {
-    let cfg = require("./../webhook.json") as IWebhookConfig;
-    try {
-      const cfgProd = require("./../webhook.prod.json") as IWebhookConfig;
-      cfg = { ...cfg, ...cfgProd };
-    } catch {
-      logger.info("Create a 'webhook.prod.json' file to use actual settings for the bot.");
-    }
-    const hook = new DiscordWebhook(cfg, logger);
+Program
+    .command("sendHook")
+    .alias("hook")
+    .alias("h")
+    .description("Send webhook")
+    .action(sendHook);
 
-    hook.send("", {
-            embeds: [{
-              description: "The new magazine issue is out now!",
-              image: {
-                // tslint:disable-next-line:max-line-length
-                url: "https://clanquest.org/wiki/images/thumb/7/78/October_2018_001_%28Cover%29.png/463px-October_2018_001_%28Cover%29.png",
-              },
-              title: "Questholic October 2018",
-              url: "https://clanquest.org/wiki/Questaholic_-_October_2018",
-            }],
-          })
-        .then(logger.info)
-        .catch(logger.error);
-  }
+if (!process.argv.slice(2).length) {
+  Program.outputHelp();
+  process.exit();
 }
 
-Program.sendHook();
-
-// a random change
+Program.parse(process.argv);
