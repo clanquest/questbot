@@ -1,3 +1,5 @@
+import * as Discord from "discord.js";
+
 export interface IBotConfig {
   commandPrefix: string;
   token: string;
@@ -7,6 +9,8 @@ export interface IBotConfig {
 export interface IWebhookConfig {
   id: string;
   token: string;
+  message: Discord.StringResolvable;
+  messageOptions?: Discord.WebhookMessageOptions|Discord.Attachment|Discord.RichEmbed;
 }
 
 export interface ILoggerMethod {

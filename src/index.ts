@@ -9,14 +9,14 @@ Program
     .command("runBot")
     .alias("bot")
     .alias("b")
-    .description("Run QuestBot")
+    .description("Run QuestBot using the configurion in bot.prod.json.")
     .action(runBot);
 
 Program
     .command("sendHook")
     .alias("hook")
     .alias("h")
-    .description("Send webhook")
+    .description("Send webhook using the configuration in webhook.prod.json.")
     .action(sendHook);
 
 if (!process.argv.slice(2).length) {

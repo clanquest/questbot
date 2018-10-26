@@ -26,17 +26,7 @@ export function sendHook() {
   }
   const hook = new DiscordWebhook(cfg, logger);
 
-  hook.send("", {
-          embeds: [{
-            description: "The new magazine issue is out now!",
-            image: {
-              // tslint:disable-next-line:max-line-length
-              url: "https://clanquest.org/wiki/images/thumb/7/78/October_2018_001_%28Cover%29.png/463px-October_2018_001_%28Cover%29.png",
-            },
-            title: "Questholic October 2018",
-            url: "https://clanquest.org/wiki/Questaholic_-_October_2018",
-          }],
-        })
+  hook.send(cfg.message, cfg.messageOptions)
       .then(logger.info)
       .catch(logger.error);
 }
