@@ -12,7 +12,7 @@ export function runBot() {
   } catch {
     logger.info("Create a 'bot.prod.json' file to use actual settings for the bot.");
   }
-  const bot = new QuestBot(cfg, logger);
+  const bot = new QuestBot(cfg);
   bot.start();
 }
 

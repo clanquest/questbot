@@ -1,17 +1,16 @@
 import * as Discord from "discord.js";
+import * as ora from "ora";
 import { IBotCommand, IBotConfig, ILogger } from "../api";
 import PingCommand from "./commands/PingCommand";
 
 export class QuestBot {
   private cfg: IBotConfig;
-  private logger: ILogger;
   private commands: IBotCommand[];
 
   private client?: Discord.Client;
 
-  constructor(cfg: IBotConfig, logger: ILogger) {
+  constructor(cfg: IBotConfig) {
     this.cfg = cfg;
-    this.logger = logger;
 
     this.commands = [
       new PingCommand(),
@@ -19,18 +18,20 @@ export class QuestBot {
   }
 
   public start(): void {
+    const spinner = ora("Starting bot").start();
+
     this.client = new Discord.Client();
 
     this.client.on("ready", () => {
-      if (this.cfg.game) {
-          this.client!.user.setGame(this.cfg.game);
+      if (this.cfg.activity) {
+          this.client!.user.setActivity(this.cfg.activity);
       }
       this.client!.user.setStatus("online");
-      this.logger.info("Bot started");
+      spinner.succeed("Bot started");
     });
 
     this.client.on("message", (message) => {
-      if (!message.content.startsWith(this.cfg.commandPrefix)) {
+      if (message.author.bot || !message.content.startsWith(this.cfg.commandPrefix)) {
         return;
       }
 

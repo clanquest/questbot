@@ -3,7 +3,7 @@ import * as Discord from "discord.js";
 export interface IBotConfig {
   commandPrefix: string;
   token: string;
-  game?: string;
+  activity?: string;
 }
 
 export interface IBotCommand {

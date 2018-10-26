@@ -7,15 +7,13 @@ Program
 
 Program
     .command("runBot")
-    .alias("bot")
-    .alias("b")
+    .alias("bot, b")
     .description("Run QuestBot using the configurion in bot.prod.json.")
     .action(runBot);
 
 Program
     .command("sendHook")
-    .alias("hook")
-    .alias("h")
+    .alias("hook, h")
     .description("Send webhook using the configuration in webhook.prod.json.")
     .action(sendHook);
 
