@@ -29,6 +29,8 @@
     "chalk": "^2.4.1",
     "commander": "^2.19.0",
     "discord.js": "^11.4.2",
-    "ora": "^3.0.0"
+    "discord.js-commando": "^0.10.0",
+    "ora": "^3.0.0",
+    "sqlite": "^3.0.0"
   }
 }

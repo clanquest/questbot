@@ -1,26 +1,33 @@
-import * as Discord from "discord.js";
+import * as Commando from "discord.js-commando";
 import * as ora from "ora";
-import { IBotCommand, IBotConfig, ILogger } from "../api";
-import PingCommand from "./commands/PingCommand";
+import * as path from "path";
+import { IBotConfig } from "../api";
 
 export class QuestBot {
   private cfg: IBotConfig;
-  private commands: IBotCommand[];
+  private settingProvider: Commando.SettingProvider | Promise<Commando.SettingProvider>;
 
-  private client?: Discord.Client;
+  private client?: Commando.CommandoClient;
 
-  constructor(cfg: IBotConfig) {
+  constructor(cfg: IBotConfig, settingProvider: Commando.SettingProvider | Promise<Commando.SettingProvider>) {
     this.cfg = cfg;
-
-    this.commands = [
-      new PingCommand(),
-    ];
+    this.settingProvider = settingProvider;
   }
 
   public start(): void {
     const spinner = ora("Starting bot").start();
 
-    this.client = new Discord.Client();
+    const commandoConfig: Commando.CommandoClientOptions = {
+      commandPrefix: this.cfg.commandPrefix,
+      disableEveryone: true,
+      owner: this.cfg.owner,
+    };
+
+    this.client = new Commando.CommandoClient(commandoConfig);
+
+    this.registerCommands();
+
+    this.client.setProvider(this.settingProvider);
 
     this.client.on("ready", () => {
       if (this.cfg.activity) {
@@ -30,18 +37,23 @@ export class QuestBot {
       spinner.succeed("Bot started");
     });
 
-    this.client.on("message", (message) => {
-      if (message.author.bot || !message.content.startsWith(this.cfg.commandPrefix)) {
-        return;
-      }
-
-      const command: IBotCommand | undefined
-          = this.commands.find((cmd) => message.content.startsWith(this.cfg.commandPrefix + cmd.name));
-      if (command) {
-        command.execute(message);
-      }
-    });
-
     this.client.login(this.cfg.token);
+  }
+
+  private registerCommands(): void {
+    if (!this.client) {
+      throw new Error("Client not initialized when registering commands.");
+    }
+
+    this.client.registry
+        .registerDefaultTypes()
+        .registerDefaultGroups()
+        .registerDefaultCommands({
+          eval_: false,
+        })
+        .registerGroups([
+            ["test", "Test commands"],
+        ])
+        .registerCommandsIn(path.join(__dirname, "commands"));
   }
 }

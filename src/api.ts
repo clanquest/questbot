@@ -3,6 +3,7 @@ import * as Discord from "discord.js";
 export interface IBotConfig {
   commandPrefix: string;
   token: string;
+  owner?: string | string[] | Set<string>;
   activity?: string;
 }
 
