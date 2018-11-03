@@ -34,7 +34,7 @@ npm run-script start sendHook
 
 ## Contributing
 
-We accept contributions from all Clan Quest members. If you intend to contribute, please let us know on our [Clan Quest forums](https://clanquest.org/forums/) and we will add you as contributor to the [Clan Quest organization](https://github.com/clanquest). Note that this repository is not licensed. Any contributions you make to the code will be considered property of Clan Quest once merged. However, you are free to reuse your own code in other projects.
+We accept contributions from all Clan Quest members. If you intend to contribute, please let us know on our [Clan Quest forums](https://clanquest.org/forums/) and we will add you as contributor to the [Clan Quest organization](https://github.com/clanquest). The code in this repository is licensed under the MIT license.
 
 To contribute, develop your feature on a separate git branch (either on the main repository or on a fork) and send a pull request once it is ready. Send it for review for one of the [code owners](CODEOWNERS), and we will check if the code meets our safety and style standards. Note that if you plan on implementing a new feature, it may be worth checking with a code owner if the feature will be accepted in the first place to prevent unnecessary work.
 
