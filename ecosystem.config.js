@@ -17,11 +17,11 @@ module.exports = {
 
   deploy : {
     production : {
-      user : 'cireon',
+      user : 'node',
       host : 'clanquest.org',
       ref  : 'origin/master',
       repo : 'git@github.com:clanquest/questbot.git',
-      path : '/home/cireon/questbot',
+      path : '/home/node/questbot',
       'post-deploy' : 'npm install && npm run-script build && pm2 reload ecosystem.config.js --env production'
     }
   }
