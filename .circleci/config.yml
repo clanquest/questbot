@@ -37,7 +37,7 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "package-lock.json" }}
       - run: npm run-script lint
-  
+
   deploy:
     docker:
       - image: circleci/node:latest-v8.x
@@ -48,6 +48,7 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "package-lock.json" }}
       - run: sudo npm install -g pm2
+      - run: echo 'clanquest.org,45.33.99.4 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBcUo9JpxttuJV5AHthqze1F/DrlfDinZPSY7ex9nxy1D28z2lt8AIyYImHhK4JWBId6066fvXM7lN3CEJyEE5k=' >> ~/.ssh/known_hosts
       - run: pm2 deploy ecosystem.config.js production
 
 workflows:
