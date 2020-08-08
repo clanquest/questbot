@@ -52,6 +52,7 @@ export class QuestBot {
           eval_: false,
         })
         .registerGroups([
+            ["announcement", "Announcement commands"],
             ["test", "Test commands"],
         ])
         .registerCommandsIn(path.join(__dirname, "commands"));
