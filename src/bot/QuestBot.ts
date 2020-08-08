@@ -72,7 +72,12 @@ export class QuestBot {
 }
 
 function commandInhibitor(msg: Commando.CommandoMessage): false | string | Commando.Inhibition {
+  if (msg.channel instanceof Discord.DMChannel) {
+    return false;
+  }
+
   const commandChannels = msg.client.settings.get(allowedChannelsKey, []) as string[];
+
   if (commandChannels.includes(msg.channel.id)) {
     return false;
   }
