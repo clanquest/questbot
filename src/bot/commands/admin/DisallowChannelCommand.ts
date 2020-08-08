@@ -19,9 +19,9 @@ export default class DisallowChannelCommand extends Commando.Command {
       : Promise<(Discord.Message|Discord.Message[])> {
     let allowedChannels = msg.client.settings.get(allowedChannelsKey, []) as string[];
     allowedChannels = allowedChannels.filter((val) => val !== msg.channel.id);
-    msg.client.settings.set(allowedChannelsKey, allowedChannels);
+    await msg.client.settings.set(allowedChannelsKey, allowedChannels);
 
-    msg.react(successReaction);
+    await msg.react(successReaction);
 
     return [];
   }

@@ -20,10 +20,10 @@ export default class AllowChannelCommand extends Commando.Command {
     const allowedChannels = msg.client.settings.get(allowedChannelsKey, []) as string[];
     if (!allowedChannels.includes(msg.channel.id)) {
       allowedChannels.push(msg.channel.id);
-      msg.client.settings.set(allowedChannelsKey, allowedChannels);
+      await msg.client.settings.set(allowedChannelsKey, allowedChannels);
     }
 
-    msg.react(successReaction);
+    await msg.react(successReaction);
 
     return [];
   }
