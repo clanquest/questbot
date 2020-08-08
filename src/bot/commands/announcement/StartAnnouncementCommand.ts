@@ -1,6 +1,7 @@
 import * as Discord from "discord.js";
 import * as Commando from "discord.js-commando";
 import { Announcement } from "../../Announcement";
+import { successReaction } from "../../constants";
 
 export default class StartAnnouncementCommand extends Commando.Command {
   constructor(client: Commando.CommandoClient) {
@@ -19,7 +20,7 @@ export default class StartAnnouncementCommand extends Commando.Command {
       : Promise<(Discord.Message|Discord.Message[])> {
     Announcement.startNew(msg.guild);
 
-    await msg.react("👍");
+    await msg.react(successReaction);
 
     return [];
   }
