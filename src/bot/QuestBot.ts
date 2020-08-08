@@ -1,8 +1,9 @@
+import * as Discord from "discord.js";
 import * as Commando from "discord.js-commando";
 import * as ora from "ora";
 import * as path from "path";
 import { IBotConfig } from "../api";
-import { allowedChannelsKey } from "./constants";
+import { allowedChannelsKey, notifyChannelKey } from "./constants";
 
 export class QuestBot {
   private cfg: IBotConfig;
@@ -32,11 +33,18 @@ export class QuestBot {
 
     this.client.dispatcher.addInhibitor(commandInhibitor);
 
-    this.client.on("ready", () => {
+    this.client.on("ready", async () => {
       if (this.cfg.activity) {
           this.client!.user!.setActivity(this.cfg.activity);
       }
       this.client!.user!.setStatus("online");
+
+      const notifyChannel = this.client?.settings.get(notifyChannelKey) as string | undefined;
+      if (notifyChannel && notifyChannel.length) {
+        const channel = (await this.client!.channels.fetch(notifyChannel)) as Discord.TextChannel;
+        await channel?.send("QuestBot has successfully (re)started");
+      }
+
       spinner.succeed("Bot started");
     });
 
@@ -57,6 +65,7 @@ export class QuestBot {
         .registerGroups([
             ["admin", "Administrative commands"],
             ["announcement", "Announcement commands"],
+            ["test", "Test commands"],
         ])
         .registerCommandsIn(path.join(__dirname, "commands"));
   }
