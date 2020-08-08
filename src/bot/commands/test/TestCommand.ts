@@ -12,7 +12,7 @@ export default class TestCommand extends Commando.Command {
     });
   }
 
-  public async run(msg: Commando.CommandMessage, args: object | string | string[])
+  public async run(msg: Commando.CommandoMessage, args: object | string | string[])
       : Promise<(Discord.Message|Discord.Message[])> {
     return await msg.reply("Test message received!");
   }

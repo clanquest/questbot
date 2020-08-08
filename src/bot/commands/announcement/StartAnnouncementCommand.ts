@@ -10,10 +10,11 @@ export default class StartAnnouncementCommand extends Commando.Command {
       group: "announcement",
       memberName: "announcement-start",
       name: "announcement-start",
+      userPermissions: [ "MANAGE_MESSAGES" ],
     });
   }
 
-  public async run(msg: Commando.CommandMessage)
+  public async run(msg: Commando.CommandoMessage)
       : Promise<(Discord.Message|Discord.Message[])> {
     Announcement.startNew();
 

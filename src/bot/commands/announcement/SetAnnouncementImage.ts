@@ -15,10 +15,11 @@ export default class SetAnnouncementImageCommand extends Commando.Command {
       group: "announcement",
       memberName: "announcement-image",
       name: "announcement-image",
+      userPermissions: [ "MANAGE_MESSAGES" ],
     });
   }
 
-  public async run(msg: Commando.CommandMessage, { imageUrl }: { imageUrl: string })
+  public async run(msg: Commando.CommandoMessage, { imageUrl }: { imageUrl: string })
       : Promise<(Discord.Message|Discord.Message[])> {
     const announcement = Announcement.instance;
     if (!announcement) {

@@ -17,7 +17,7 @@ export interface IWebhookConfig {
   id: string;
   token: string;
   message: Discord.StringResolvable;
-  messageOptions?: Discord.WebhookMessageOptions|Discord.Attachment|Discord.RichEmbed;
+  messageOptions?: Discord.MessageAdditions;
 }
 
 export interface ILoggerMethod {

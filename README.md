@@ -4,7 +4,7 @@ QuestBot is a Discord bot based on [discord.js](https://discord.js.org/) built t
 
 ## Run the bot
 
-To run this bot, you need to have [Node.js](https://nodejs.org/en/) installed. Once you have cloned the repository you should first install the dependencies:
+To run this bot, you need to have [Node.js](https://nodejs.org/en/) 12.0.0+ installed. Once you have cloned the repository you should first install the dependencies:
 
 ```
 npm install

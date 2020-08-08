@@ -15,10 +15,11 @@ export default class SetAnnouncementMessageCommand extends Commando.Command {
       group: "announcement",
       memberName: "announcement-message",
       name: "announcement-message",
+      userPermissions: [ "MANAGE_MESSAGES" ],
     });
   }
 
-  public async run(msg: Commando.CommandMessage, { message }: { message: string })
+  public async run(msg: Commando.CommandoMessage, { message }: { message: string })
       : Promise<(Discord.Message|Discord.Message[])> {
     const announcement = Announcement.instance;
     if (!announcement) {

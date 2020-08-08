@@ -10,7 +10,7 @@ export class DiscordWebhook {
 
   public send(
       content: Discord.StringResolvable,
-      options?: Discord.WebhookMessageOptions|Discord.Attachment|Discord.RichEmbed)
+      options?: Discord.MessageAdditions)
       : Promise<(Discord.Message|Discord.Message[]|object|object[])> {
     return this.hook.send(content, options);
   }

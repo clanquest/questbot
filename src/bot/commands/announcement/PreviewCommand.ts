@@ -10,10 +10,11 @@ export default class PreviewCommand extends Commando.Command {
       group: "announcement",
       memberName: "preview",
       name: "preview",
+      userPermissions: [ "MANAGE_MESSAGES" ],
     });
   }
 
-  public async run(msg: Commando.CommandMessage)
+  public async run(msg: Commando.CommandoMessage)
       : Promise<(Discord.Message|Discord.Message[])> {
     const announcement = Announcement.instance;
     if (!announcement) {

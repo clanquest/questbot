@@ -19,7 +19,7 @@ export class QuestBot {
 
     const commandoConfig: Commando.CommandoClientOptions = {
       commandPrefix: this.cfg.commandPrefix,
-      disableEveryone: true,
+      disableMentions: "everyone",
       owner: this.cfg.owner,
     };
 
@@ -31,9 +31,9 @@ export class QuestBot {
 
     this.client.on("ready", () => {
       if (this.cfg.activity) {
-          this.client!.user.setActivity(this.cfg.activity);
+          this.client!.user!.setActivity(this.cfg.activity);
       }
-      this.client!.user.setStatus("online");
+      this.client!.user!.setStatus("online");
       spinner.succeed("Bot started");
     });
 
@@ -49,7 +49,7 @@ export class QuestBot {
         .registerDefaultTypes()
         .registerDefaultGroups()
         .registerDefaultCommands({
-          eval_: false,
+          eval: false,
         })
         .registerGroups([
             ["announcement", "Announcement commands"],

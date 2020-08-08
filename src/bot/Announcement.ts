@@ -17,8 +17,8 @@ export class Announcement {
   public embedUrl?: string;
   public embedImageUrl?: string;
 
-  public toEmbed(): Discord.RichEmbed {
-    return new Discord.RichEmbed({
+  public toEmbed(): Discord.MessageEmbed {
+    return new Discord.MessageEmbed({
       description: this.embedDescription,
       image: this.embedImageUrl ? { url: this.embedImageUrl } : undefined,
       title: this.embedTitle,
