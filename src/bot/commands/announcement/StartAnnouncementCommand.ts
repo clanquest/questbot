@@ -8,6 +8,7 @@ export default class StartAnnouncementCommand extends Commando.Command {
       description: "Starts building an announcement",
       details: "Starts the process of building an announcement that can be sent or previewed.",
       group: "announcement",
+      guildOnly: true,
       memberName: "announcement-start",
       name: "announcement-start",
       userPermissions: [ "MANAGE_MESSAGES" ],
@@ -16,7 +17,7 @@ export default class StartAnnouncementCommand extends Commando.Command {
 
   public async run(msg: Commando.CommandoMessage)
       : Promise<(Discord.Message|Discord.Message[])> {
-    Announcement.startNew();
+    Announcement.startNew(msg.guild);
 
     await msg.react("👍");
 

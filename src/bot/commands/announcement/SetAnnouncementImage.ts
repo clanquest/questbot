@@ -13,6 +13,7 @@ export default class SetAnnouncementImageCommand extends Commando.Command {
       description: "Sets the announcement image (should be a URL)",
       details: "Sets the image that should be used for the announcement.",
       group: "announcement",
+      guildOnly: true,
       memberName: "announcement-image",
       name: "announcement-image",
       userPermissions: [ "MANAGE_MESSAGES" ],
@@ -21,7 +22,7 @@ export default class SetAnnouncementImageCommand extends Commando.Command {
 
   public async run(msg: Commando.CommandoMessage, { imageUrl }: { imageUrl: string })
       : Promise<(Discord.Message|Discord.Message[])> {
-    const announcement = Announcement.instance;
+    const announcement = Announcement.forGuild(msg.guild);
     if (!announcement) {
       return await msg.reply("There is no announcement to update!");
     }

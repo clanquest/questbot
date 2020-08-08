@@ -8,6 +8,7 @@ export default class PreviewCommand extends Commando.Command {
       description: "Preview an announcement",
       details: "Previews the announcement that is currently under construction.",
       group: "announcement",
+      guildOnly: true,
       memberName: "preview",
       name: "preview",
       userPermissions: [ "MANAGE_MESSAGES" ],
@@ -16,7 +17,7 @@ export default class PreviewCommand extends Commando.Command {
 
   public async run(msg: Commando.CommandoMessage)
       : Promise<(Discord.Message|Discord.Message[])> {
-    const announcement = Announcement.instance;
+    const announcement = Announcement.forGuild(msg.guild);
     if (!announcement) {
       return await msg.reply("There is no announcement to preview!");
     }

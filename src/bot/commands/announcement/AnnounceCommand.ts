@@ -15,6 +15,7 @@ export default class AnnounceCommand extends Commando.Command {
       description: "Send an announcement",
       details: "Sends the announcement that is currently under construction.",
       group: "announcement",
+      guildOnly: true,
       memberName: "announce",
       name: "announce",
       userPermissions: [ "MANAGE_MESSAGES" ],
@@ -23,7 +24,7 @@ export default class AnnounceCommand extends Commando.Command {
 
   public async run(msg: Commando.CommandoMessage, { channel }: { channel: Discord.TextChannel })
       : Promise<(Discord.Message|Discord.Message[])> {
-    const announcement = Announcement.instance;
+    const announcement = Announcement.forGuild(msg.guild);
     if (!announcement) {
       return await msg.reply("There is no announcement to make!");
     }

@@ -13,6 +13,7 @@ export default class SetAnnouncementTitleCommand extends Commando.Command {
       description: "Sets the announcement title",
       details: "Sets the title that should be used for the announcement.",
       group: "announcement",
+      guildOnly: true,
       memberName: "announcement-title",
       name: "announcement-title",
       userPermissions: [ "MANAGE_MESSAGES" ],
@@ -21,7 +22,7 @@ export default class SetAnnouncementTitleCommand extends Commando.Command {
 
   public async run(msg: Commando.CommandoMessage, { title }: { title: string })
       : Promise<(Discord.Message|Discord.Message[])> {
-    const announcement = Announcement.instance;
+    const announcement = Announcement.forGuild(msg.guild);
     if (!announcement) {
       return await msg.reply("There is no announcement to update!");
     }

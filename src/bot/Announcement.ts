@@ -1,15 +1,15 @@
 import * as Discord from "discord.js";
 
 export class Announcement {
-  public static get instance(): Announcement {
-    return Announcement.inst;
+  public static startNew(guild: Discord.Guild): void {
+    this.instances.set(guild.id, new Announcement());
   }
 
-  public static startNew(): void {
-    Announcement.inst = new Announcement();
+  public static forGuild(guild: Discord.Guild): Announcement | undefined {
+    return Announcement.instances.get(guild.id);
   }
 
-  private static inst: Announcement;
+  private static instances: Map<string, Announcement> = new Map();
 
   public message?: string;
   public embedTitle?: string;
