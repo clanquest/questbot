@@ -2,6 +2,7 @@ import * as Commando from "discord.js-commando";
 import * as ora from "ora";
 import * as path from "path";
 import { IBotConfig } from "../api";
+import { allowedChannelsKey } from "./constants";
 
 export class QuestBot {
   private cfg: IBotConfig;
@@ -28,6 +29,8 @@ export class QuestBot {
     this.registerCommands();
 
     this.client.setProvider(this.settingProvider);
+
+    this.client.dispatcher.addInhibitor(commandInhibitor);
 
     this.client.on("ready", () => {
       if (this.cfg.activity) {
@@ -57,4 +60,17 @@ export class QuestBot {
         ])
         .registerCommandsIn(path.join(__dirname, "commands"));
   }
+}
+
+function commandInhibitor(msg: Commando.CommandoMessage): false | string | Commando.Inhibition {
+  const commandChannels = msg.client.settings.get(allowedChannelsKey, []) as string[];
+  if (commandChannels.includes(msg.channel.id)) {
+    return false;
+  }
+
+  if (msg.command.group.id === "admin" && msg.member.hasPermission("ADMINISTRATOR")) {
+    return false;
+  }
+
+  return "You are not allowed to use commands here";
 }
