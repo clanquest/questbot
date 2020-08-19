@@ -5,6 +5,10 @@ export interface IBotConfig {
   token: string;
   owner?: string | string[] | Set<string>;
   activity?: string;
+  listenChannel?: string;
+  db?: string;
+  dbUser?: string;
+  dbPassword?: string;
 }
 
 export interface IBotCommand {

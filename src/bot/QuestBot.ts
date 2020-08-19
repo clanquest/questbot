@@ -2,6 +2,7 @@ import * as Discord from "discord.js";
 import * as Commando from "discord.js-commando";
 import * as ora from "ora";
 import * as path from "path";
+import { AnnouncmentListener } from "./AnnouncementListener"
 import { IBotConfig } from "../api";
 import { allowedChannelsKey, notifyChannelKey } from "./constants";
 
@@ -43,6 +44,14 @@ export class QuestBot {
       if (notifyChannel && notifyChannel.length) {
         const channel = (await this.client!.channels.fetch(notifyChannel)) as Discord.TextChannel;
         await channel?.send("QuestBot has successfully (re)started");
+      }
+
+      if (this.cfg.listenChannel) { // if a listen channel is set, setup an announcement listener
+        const announcementListener = new AnnouncmentListener(this.cfg.listenChannel, this.cfg);
+
+        // cache the messages in our channel
+        (this.client?.channels.cache.get(this.cfg.listenChannel) as Discord.TextChannel).messages.fetch();
+        announcementListener.start(this.client!);
       }
 
       spinner.succeed("Bot started");
