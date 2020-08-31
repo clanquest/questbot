@@ -19,8 +19,16 @@ export class AnnouncmentListener {
 		});
 	}
 
+	/**
+	 * Starts an AnnouncementListener and sets up events to listen for new messages, 
+	 * deleted messages, and edited messages. Messages are then saved to the cq_announcements 
+	 * database table.
+	 * 
+	 * @param client Discord client to operate on
+	 */
 	public async start(client: Discord.Client) {
 		client.on('message', async (message) => {
+			// if no announcement channel set, don't do anything.
 			if (message.channel.id != this.announcementChannel)
 				return;
 
@@ -31,6 +39,7 @@ export class AnnouncmentListener {
 		});
 
 		client.on('messageDelete', async (deletedMessage) => {
+			// if no announcement channel set, don't do anything.
 			if (deletedMessage.channel.id != this.announcementChannel)
 				return;
 
@@ -38,6 +47,7 @@ export class AnnouncmentListener {
 		});
 
 		client.on('messageUpdate', async (oldMessage, newMessage) => {
+			// if no announcement channel set, don't do anything.
 			if (newMessage.channel.id != this.announcementChannel)
 				return;
 			
@@ -48,6 +58,11 @@ export class AnnouncmentListener {
 		});
 	}
 
+	/**
+	 * Parse contents of a message and extract the text or embed data if the text is blank.
+	 * 
+	 * @param message Discord message announcement to parse for contents.
+	 */
 	private getAnnouncementMessage(message: Discord.Message | Discord.PartialMessage): string {
 		if (message.partial) // we have a partial message, upgrade it
 			message.fetch();
@@ -61,6 +76,11 @@ export class AnnouncmentListener {
 		return announcementMessage;
 	}
 
+	/**
+	 * Parse a selected message and retrieve an embed url to link to in the news post.
+	 * 
+	 * @param message Discord message announcement to parse for a hyperlink.
+	 */
 	private getEmbedHref(message: Discord.Message | Discord.PartialMessage): string | null {
 		if (message.partial) // we have a partial message, upgrade it
 			message.fetch();
