@@ -34,8 +34,12 @@ export class AnnouncmentListener {
 
 			let announcementMessage = this.getAnnouncementMessage(message);
 			let embedHref = this.getEmbedHref(message);
+			let messageAuthor = null;
+			if (message.member) {
+				messageAuthor = message.member.nickname ? message.member.nickname : message.author.username;
+			}
 
-			(await this.db).execute('INSERT INTO cq_announcements (id, message, timestamp, embed_href) VALUES (?, ?, ?, ?)', [message.id, announcementMessage, message.createdTimestamp, embedHref]);
+			(await this.db).execute('INSERT INTO cq_announcements (id, message, author, timestamp, embed_href) VALUES (?, ?, ?, ?, ?)', [message.id, announcementMessage, messageAuthor, message.createdTimestamp, embedHref]);
 		});
 
 		client.on('messageDelete', async (deletedMessage) => {
