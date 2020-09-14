@@ -2,8 +2,8 @@ import * as Discord from "discord.js";
 import * as Commando from "discord.js-commando";
 import * as ora from "ora";
 import * as path from "path";
-import { AnnouncmentListener } from "./AnnouncementListener"
 import { IBotConfig } from "../api";
+import { AnnouncmentListener } from "./AnnouncementListener";
 import { allowedChannelsKey, notifyChannelKey } from "./constants";
 
 export class QuestBot {
