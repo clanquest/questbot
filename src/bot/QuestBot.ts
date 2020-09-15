@@ -3,7 +3,7 @@ import * as Commando from "discord.js-commando";
 import * as ora from "ora";
 import * as path from "path";
 import { IBotConfig } from "../api";
-import { AnnouncmentListener } from "./AnnouncementListener";
+import { AnnouncementListener } from "./AnnouncementListener";
 import { allowedChannelsKey, notifyChannelKey } from "./constants";
 
 export class QuestBot {
@@ -47,7 +47,7 @@ export class QuestBot {
       }
 
       if (this.cfg.listenChannel) { // if a listen channel is set, setup an announcement listener
-        const announcementListener = new AnnouncmentListener(this.cfg.listenChannel, this.cfg);
+        const announcementListener = new AnnouncementListener(this.cfg.listenChannel, this.cfg);
 
         // cache the messages in our channel
         (this.client?.channels.cache.get(this.cfg.listenChannel) as Discord.TextChannel).messages.fetch();
