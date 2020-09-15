@@ -48,7 +48,7 @@ export class QuestBot {
 
       if (this.cfg.listenChannel) { // if a listen channel is set, setup an announcement listener
         const announcementListener = new AnnouncementListener(this.cfg.listenChannel, this.cfg);
-
+      
         // cache the messages in our channel
         (this.client?.channels.cache.get(this.cfg.listenChannel) as Discord.TextChannel).messages.fetch();
         announcementListener.start(this.client!);
