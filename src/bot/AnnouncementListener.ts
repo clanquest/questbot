@@ -2,7 +2,7 @@ import * as Discord from "discord.js";
 import * as MySQL from "mysql2/promise";
 import { IBotConfig } from "../api";
 
-export class AnnouncmentListener {
+export class AnnouncementListener {
     private announcementChannel: string;
     private db: Promise<MySQL.Connection>;
 
