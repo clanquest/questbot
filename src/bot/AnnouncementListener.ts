@@ -4,19 +4,11 @@ import { IBotConfig } from "../api";
 
 export class AnnouncementListener {
     private announcementChannel: string;
-    private db: Promise<MySQL.Connection>;
+    private cfg: IBotConfig;
 
     constructor(channelID: string, cfg: IBotConfig) {
         this.announcementChannel = channelID;
-        this.db = MySQL.createConnection({
-            database: cfg.db,
-            host: "localhost",
-            password: cfg.dbPassword,
-            user: cfg.dbUser,
-        })
-        .catch((err) => {
-            throw new Error("Unable to connect to database. " + err);
-        });
+        this.cfg = cfg;
     }
 
     /**
@@ -33,6 +25,15 @@ export class AnnouncementListener {
                 return;
             }
 
+            const db = MySQL.createConnection({
+                database: this.cfg.db,
+                host: "localhost",
+                password: this.cfg.dbPassword,
+                user: this.cfg.dbUser,
+            })
+            .catch((err) => {
+                throw new Error("Unable to connect to database. " + err);
+            });
             const announcementMessage = this.getAnnouncementMessage(message);
             const embedHref = this.getEmbedHref(message);
             let messageAuthor = null;
@@ -40,7 +41,7 @@ export class AnnouncementListener {
                 messageAuthor = message.member.nickname ? message.member.nickname : message.author.username;
             }
 
-            (await this.db).execute("INSERT INTO cq_announcements (id, message, author, timestamp, embed_href) VALUES (?, ?, ?, ?, ?)", [message.id, announcementMessage, messageAuthor, message.createdTimestamp, embedHref]);
+            (await db).execute("INSERT INTO cq_announcements (id, message, author, timestamp, embed_href) VALUES (?, ?, ?, ?, ?)", [message.id, announcementMessage, messageAuthor, message.createdTimestamp, embedHref]);
         });
 
         client.on("messageDelete", async (deletedMessage) => {
@@ -49,7 +50,17 @@ export class AnnouncementListener {
                 return;
             }
 
-            (await this.db).execute("DELETE FROM cq_announcements WHERE id = ?", [deletedMessage.id]);
+            const db = MySQL.createConnection({
+                database: this.cfg.db,
+                host: "localhost",
+                password: this.cfg.dbPassword,
+                user: this.cfg.dbUser,
+            })
+            .catch((err) => {
+                throw new Error("Unable to connect to database. " + err);
+            });
+
+            (await db).execute("DELETE FROM cq_announcements WHERE id = ?", [deletedMessage.id]);
         });
 
         client.on("messageUpdate", async (oldMessage, newMessage) => {
@@ -58,10 +69,19 @@ export class AnnouncementListener {
                 return;
             }
 
+            const db = MySQL.createConnection({
+                database: this.cfg.db,
+                host: "localhost",
+                password: this.cfg.dbPassword,
+                user: this.cfg.dbUser,
+            })
+            .catch((err) => {
+                throw new Error("Unable to connect to database. " + err);
+            });
             const announcementMessage = this.getAnnouncementMessage(newMessage);
             const embedHref = this.getEmbedHref(newMessage);
 
-            (await this.db).execute("UPDATE cq_announcements SET message = ?, embed_href = ? WHERE id = ?",
+            (await db).execute("UPDATE cq_announcements SET message = ?, embed_href = ? WHERE id = ?",
                 [announcementMessage, embedHref, oldMessage.id]);
         });
     }
