@@ -16,7 +16,7 @@ export default class AnnounceCommand extends Commando.Command {
           key: "everyone",
           prompt: "everyone",
           type: "boolean",
-        }
+        },
       ],
       description: "Send an announcement",
       details: "Sends the announcement that is currently under construction.",
@@ -28,8 +28,10 @@ export default class AnnounceCommand extends Commando.Command {
     });
   }
 
-  public async run(msg: Commando.CommandoMessage, { channel, everyone }: { channel: Discord.TextChannel, everyone: boolean })
-      : Promise<(Discord.Message|Discord.Message[])> {
+  public async run(
+      msg: Commando.CommandoMessage,
+      { channel, everyone }: ICommandArgs,
+      ): Promise<(Discord.Message|Discord.Message[])> {
     const announcement = Announcement.forGuild(msg.guild);
     if (!announcement) {
       return await msg.reply("There is no announcement to make!");
@@ -39,4 +41,9 @@ export default class AnnounceCommand extends Commando.Command {
 
     return await channel.send(message, announcement.toEmbed());
   }
+}
+
+interface ICommandArgs {
+  channel: Discord.TextChannel;
+  everyone: boolean;
 }
