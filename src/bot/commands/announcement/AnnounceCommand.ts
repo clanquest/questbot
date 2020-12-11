@@ -37,7 +37,7 @@ export default class AnnounceCommand extends Commando.Command {
       return await msg.reply("There is no announcement to make!");
     }
 
-    const message = `${everyone ? "@everyone " : ""} ${announcement.message}`;
+    const message = `${everyone ? "@everyone " : ""}${announcement.message ? announcement.message : ""}`;
 
     return await channel.send(message, announcement.toEmbed());
   }
