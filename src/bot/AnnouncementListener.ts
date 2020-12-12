@@ -101,9 +101,10 @@ export class AnnouncementListener {
         // get the message contents
         let announcementMessage = message.cleanContent;
 
-        // if it's empty and we have an embed, use that instead
-        if (announcementMessage === "" && message.embeds.length > 0) {
-            announcementMessage = message.embeds[0].description as string;
+        // if we have an embed, insert it after our message
+        if (message.embeds.length > 0) {
+            announcementMessage += " ";
+            announcementMessage += message.embeds[0].description as string;
         }
 
         return announcementMessage;
