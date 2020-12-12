@@ -22,7 +22,7 @@ export class QuestBot {
 
     const commandoConfig: Commando.CommandoClientOptions = {
       commandPrefix: this.cfg.commandPrefix,
-      disableMentions: "everyone",
+      disableMentions: "none",
       owner: this.cfg.owner,
     };
 
