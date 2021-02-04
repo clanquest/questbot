@@ -99,7 +99,7 @@ export class AnnouncementListener {
         message = message as Discord.Message;
 
         // get the message contents
-        let announcementMessage = message.cleanContent;
+        let announcementMessage = this.parseMessageMentions(message);
 
         // if we have an embed, insert it after our message
         if (message.embeds.length > 0) {
@@ -128,5 +128,30 @@ export class AnnouncementListener {
         }
 
         return embedHref;
+    }
+
+    private parseMessageMentions(message: Discord.Message): string {
+        let messageParsed: string = message.content;
+        const channelMentions = message.mentions.channels;
+        const memberMentions = message.mentions.members;
+        const roleMentions = message.mentions.roles;
+
+        channelMentions.each((channel) => {
+            messageParsed = messageParsed.replace("<#" + channel.id + ">", "#" + channel.name);
+        });
+
+        roleMentions.each((role) => {
+            messageParsed = messageParsed.replace("<@&" + role.id + ">", "@" + role.name);
+        });
+
+        if (memberMentions) {
+            memberMentions.each((member) => {
+                const nickname = typeof(member.nickname) === "undefined" ? member.user.username : member.nickname;
+                messageParsed = messageParsed.replace("<@" + member.id + ">", "@" + member.user.username);
+                messageParsed = messageParsed.replace("<@!" + member.id + ">", "@" + nickname);
+            });
+        }
+
+        return messageParsed;
     }
 }
