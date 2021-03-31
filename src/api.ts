@@ -1,5 +1,8 @@
 import * as Discord from "discord.js";
 
+export type WebHookOptions = Discord.MessageAdditions |
+  (Discord.WebhookMessageOptions & { split?: false | undefined; });
+
 export interface IBotConfig {
   commandPrefix: string;
   token: string;
