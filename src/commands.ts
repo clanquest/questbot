@@ -39,7 +39,7 @@ export function sendHook() {
   }
   const hook = new DiscordWebhook(cfg, logger);
 
-  hook.send(cfg.message, cfg.messageOptions)
+  hook.send(cfg.message, cfg.messageOptions === undefined ? {} : cfg.messageOptions)
       .then(logger.info)
       .catch(logger.error);
 }

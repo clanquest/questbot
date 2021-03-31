@@ -10,7 +10,7 @@ export class DiscordWebhook {
 
   public send(
       content: Discord.StringResolvable,
-      options?: Discord.MessageAdditions)
+      options: Discord.MessageAdditions | (Discord.WebhookMessageOptions & { split?: false | undefined; }))
       : Promise<(Discord.Message|Discord.Message[]|object|object[])> {
     return this.hook.send(content, options);
   }
