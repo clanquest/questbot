@@ -99,15 +99,7 @@ export class AnnouncementListener {
      * @param message Discord message announcement to parse for contents.
      */
     private async getAnnouncementMessage(message: Discord.Message | Discord.PartialMessage): Promise<string> {
-        let fullMessage: Discord.Message | Discord.PartialMessage = message;
-
-        if (message.partial) { // we have a partial message, upgrade it
-           await message.fetch().then((m) => {
-            fullMessage = m;
-           });
-        }
-
-        fullMessage = fullMessage as Discord.Message;
+        const fullMessage = message.partial ? await message.fetch() : message as Discord.Message;
 
         // get the message contents
         let announcementMessage = this.parseMessageMentions(fullMessage);
@@ -127,15 +119,7 @@ export class AnnouncementListener {
      * @param message Discord message announcement to parse for a hyperlink.
      */
     private async getEmbedHref(message: Discord.Message | Discord.PartialMessage): Promise<string | null> {
-        let fullMessage: Discord.Message | Discord.PartialMessage = message;
-
-        if (message.partial) { // we have a partial message, upgrade it
-           await message.fetch().then((m) => {
-            fullMessage = m;
-           });
-        }
-
-        fullMessage = fullMessage as Discord.Message;
+        const fullMessage = message.partial ? await message.fetch() : message as Discord.Message;
 
         let embedHref = null;
         // if we have embeds and the url isn't blank, store it
