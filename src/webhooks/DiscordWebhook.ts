@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { ILogger, IWebhookConfig } from "../api";
+import { ILogger, IWebhookConfig, WebHookOptions } from "../api";
 
 export class DiscordWebhook {
   private hook: Discord.WebhookClient;
@@ -10,7 +10,7 @@ export class DiscordWebhook {
 
   public send(
       content: Discord.StringResolvable,
-      options: Discord.MessageAdditions | (Discord.WebhookMessageOptions & { split?: false | undefined; }))
+      options: WebHookOptions)
       : Promise<(Discord.Message|Discord.Message[]|object|object[])> {
     return this.hook.send(content, options);
   }
