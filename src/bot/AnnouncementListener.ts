@@ -34,14 +34,18 @@ export class AnnouncementListener {
             .catch((err) => {
                 throw new Error("Unable to connect to database. " + err);
             });
-            const announcementMessage = this.getAnnouncementMessage(message);
-            const embedHref = this.getEmbedHref(message);
+            const announcementMessage = await this.getAnnouncementMessage(message);
+            const embedHref = await this.getEmbedHref(message);
             let messageAuthor = null;
             if (message.member) {
                 messageAuthor = message.member.nickname ? message.member.nickname : message.author.username;
             }
 
-            (await db).execute("INSERT INTO cq_announcements (id, message, author, timestamp, embed_href) VALUES (?, ?, ?, ?, ?)", [message.id, announcementMessage, messageAuthor, message.createdTimestamp, embedHref]);
+            (await db).execute("INSERT INTO cq_announcements (id, message, author, timestamp, embed_href) VALUES (?, ?, ?, ?, ?)",
+                [message.id, announcementMessage, messageAuthor, message.createdTimestamp, embedHref])
+            .catch((err) => {
+                throw new Error("Unable to insert into database: " + err);
+             });
         });
 
         client.on("messageDelete", async (deletedMessage) => {
@@ -78,11 +82,14 @@ export class AnnouncementListener {
             .catch((err) => {
                 throw new Error("Unable to connect to database. " + err);
             });
-            const announcementMessage = this.getAnnouncementMessage(newMessage);
-            const embedHref = this.getEmbedHref(newMessage);
+            const announcementMessage = await this.getAnnouncementMessage(newMessage);
+            const embedHref = await this.getEmbedHref(newMessage);
 
             (await db).execute("UPDATE cq_announcements SET message = ?, embed_href = ? WHERE id = ?",
-                [announcementMessage, embedHref, oldMessage.id]);
+                [announcementMessage, embedHref, oldMessage.id])
+            .catch((err) => {
+                throw new Error("Unable to update database: " + err);
+            });
         });
     }
 
@@ -91,15 +98,19 @@ export class AnnouncementListener {
      *
      * @param message Discord message announcement to parse for contents.
      */
-    private getAnnouncementMessage(message: Discord.Message | Discord.PartialMessage): string {
+    private async getAnnouncementMessage(message: Discord.Message | Discord.PartialMessage): Promise<string> {
+        let fullMessage: Discord.Message | Discord.PartialMessage = message;
+
         if (message.partial) { // we have a partial message, upgrade it
-            message.fetch();
+           await message.fetch().then((m) => {
+            fullMessage = m;
+           });
         }
 
-        message = message as Discord.Message;
+        fullMessage = fullMessage as Discord.Message;
 
         // get the message contents
-        let announcementMessage = this.parseMessageMentions(message);
+        let announcementMessage = this.parseMessageMentions(fullMessage);
 
         // if we have an embed, insert it after our message
         if (message.embeds.length > 0) {
@@ -115,16 +126,21 @@ export class AnnouncementListener {
      *
      * @param message Discord message announcement to parse for a hyperlink.
      */
-    private getEmbedHref(message: Discord.Message | Discord.PartialMessage): string | null {
+    private async getEmbedHref(message: Discord.Message | Discord.PartialMessage): Promise<string | null> {
+        let fullMessage: Discord.Message | Discord.PartialMessage = message;
+
         if (message.partial) { // we have a partial message, upgrade it
-            message.fetch();
+           await message.fetch().then((m) => {
+            fullMessage = m;
+           });
         }
-        message = message as Discord.Message;
+
+        fullMessage = fullMessage as Discord.Message;
 
         let embedHref = null;
         // if we have embeds and the url isn't blank, store it
-        if (message.embeds.length > 0 && message.embeds[0].url) {
-            embedHref = message.embeds[0].url;
+        if (fullMessage.embeds.length > 0 && fullMessage.embeds[0].url) {
+            embedHref = fullMessage.embeds[0].url;
         }
 
         return embedHref;
