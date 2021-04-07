@@ -103,12 +103,7 @@ export class AnnouncementListener {
 
         // get the message contents
         let announcementMessage = this.parseMessageMentions(fullMessage);
-
-        // if we have an embed, insert it after our message
-        if (message.embeds.length > 0) {
-            announcementMessage += " ";
-            announcementMessage += message.embeds[0].description as string;
-        }
+        announcementMessage += this.parseMessageEmbedMentions(fullMessage);
 
         return announcementMessage;
     }
@@ -130,6 +125,12 @@ export class AnnouncementListener {
         return embedHref;
     }
 
+    /**
+     * Parse mentions found in a message that appears to our AnnouncementListener
+     *
+     * @param message Discord.Message - Message to parse mentions from
+     * @returns string containing parsed message
+     */
     private parseMessageMentions(message: Discord.Message): string {
         let messageParsed: string = message.content;
         const channelMentions = message.mentions.channels;
@@ -146,12 +147,57 @@ export class AnnouncementListener {
 
         if (memberMentions) {
             memberMentions.each((member) => {
-                const nickname = typeof(member.nickname) === "undefined" ? member.user.username : member.nickname;
+                const nickname = member.nickname === null ? member.user.username : member.nickname;
                 messageParsed = messageParsed.replace("<@" + member.id + ">", "@" + member.user.username);
                 messageParsed = messageParsed.replace("<@!" + member.id + ">", "@" + nickname);
             });
         }
 
         return messageParsed;
+    }
+
+    /**
+     * Parse message embed mentions. And return an embed formatted for display on a web page.
+     *
+     * @param message Discord.Message - Message to parse embeds from
+     * @returns string containing parsed embeds to be attached to a message.
+     */
+    private parseMessageEmbedMentions(message: Discord.Message): string {
+        if (message.embeds.length < 1) {
+            return "";
+        }
+
+        let embedsParsed: string = "";
+        const clientChannels = message.client.channels.cache;
+        const clientMembers = message.guild?.members.cache;
+        const clientRoles = message.guild?.roles.cache;
+
+        message.embeds.forEach((embed, index) => {
+            embedsParsed += index > 0 ? "\n\n" : "";
+
+            let embedDescription: string = embed.description as string;
+            clientChannels.each((channel) => {
+                if (channel.type === "text") {
+                    const textChannel = channel as Discord.TextChannel;
+                    embedDescription = embedDescription.replace("<#" + textChannel.id + ">", "#" + textChannel.name);
+                }
+            });
+
+            if (message.guild) { // if the message was sent from a guild get the member and role mentions
+                clientMembers?.each((member) => {
+                    const nickname = member.nickname === null ? member.user.username : member.nickname;
+                    embedDescription = embedDescription.replace("<@" + member.id + ">", "@" + member.user.username);
+                    embedDescription = embedDescription.replace("<@!" + member.id + ">", "@" + nickname);
+                });
+
+                clientRoles?.each((role) => {
+                    embedDescription = embedDescription.replace("<@&" + role.id + ">", "@" + role.name);
+                });
+            }
+
+            embedsParsed += embedDescription;
+        });
+
+        return embedsParsed;
     }
 }
