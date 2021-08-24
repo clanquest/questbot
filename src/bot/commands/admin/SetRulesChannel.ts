@@ -24,10 +24,9 @@ export default class SetRulesChannel extends Commando.Command {
 
   public async run(msg: Commando.CommandoMessage, { channel }: { channel: Discord.TextChannel })
       : Promise<(Discord.Message|Discord.Message[])> {
-    const currentChannelId = msg.client.settings.get(rulesChannelKey);
-    const currentChannel = (await msg.client.channels.fetch(currentChannelId)) as Discord.TextChannel;
+    const currentChannelId = msg.client.settings.get(rulesChannelKey) as Discord.Snowflake;
 
-    if (currentChannel?.id === channel.id) {
+    if (currentChannelId === channel.id) {
       return await msg.reply("Tried setting the rules channel to the existing channel.");
     }
 
