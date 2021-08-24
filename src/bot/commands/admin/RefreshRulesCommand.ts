@@ -20,7 +20,7 @@ export default class WriteRulesCommand extends Commando.Command {
       : Promise<(Discord.Message|Discord.Message[])> {
     const rulesChannelId = msg.client.settings.get(rulesChannelKey) as Discord.Snowflake | undefined;
 
-    if (!rulesChannelId || rulesChannelId.length) {
+    if (!rulesChannelId || !rulesChannelId.length) {
       return await msg.reply("No rules channel set. Cannot refresh rules.");
     }
 
