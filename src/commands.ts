@@ -1,8 +1,10 @@
+import * as Discord from "discord.js";
 import * as Commando from "discord.js-commando";
 import * as path from "path";
 import * as sqlite from "sqlite";
 import { IBotConfig, ILogger, IWebhookConfig } from "./api";
 import { QuestBot } from "./bot/QuestBot";
+import { Rules } from "./bot/Rules";
 import { DiscordWebhook } from "./webhooks/DiscordWebhook";
 
 const logger: ILogger = console;
@@ -15,6 +17,9 @@ export function runBot() {
   } catch {
     logger.info("Create a 'bot.prod.json' file to use actual settings for the bot.");
   }
+
+  const rules = require("./../rules.json") as Discord.MessageOptions[];
+  Rules.initialize(rules);
 
   const bot = new QuestBot(cfg, getSettingsProvider());
   bot.start();

@@ -12,7 +12,9 @@ export class QuestBot {
 
   private client?: Commando.CommandoClient;
 
-  constructor(cfg: IBotConfig, settingProvider: Commando.SettingProvider | Promise<Commando.SettingProvider>) {
+  constructor(
+      cfg: IBotConfig,
+      settingProvider: Commando.SettingProvider | Promise<Commando.SettingProvider>) {
     this.cfg = cfg;
     this.settingProvider = settingProvider;
   }
