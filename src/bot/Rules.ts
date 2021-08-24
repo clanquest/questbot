@@ -21,13 +21,21 @@ export class Rules {
   private async write(channel: Discord.TextChannel, existingMessages: Discord.Message[])
       : Promise<Discord.Message[]> {
     for (let i = 0; i < Math.min(this.rules.length, existingMessages.length); i++) {
-      await existingMessages[i].edit({content: this.rules[i].content, embed: this.rules[i].embed, disableMentions: "none"});
+      await existingMessages[i].edit({
+        allowedMentions: {parse: ["roles"]},
+        content: this.rules[i].content,
+        embed: this.rules[i].embed,
+      });
     }
 
     if (this.rules.length > existingMessages.length) {
       const output = Array.from(existingMessages);
       for (let i = existingMessages.length; i < this.rules.length; i++) {
-        const msg = await channel.send({content: this.rules[i].content, embed: this.rules[i].embed, disableMentions: "none"});
+        const msg = await channel.send({
+          allowedMentions: {parse: ["roles"]},
+          content: this.rules[i].content,
+          embed: this.rules[i].embed,
+        });
         output.push(msg);
       }
       return output;
