@@ -3,21 +3,21 @@
     "content": "Hi all!\n\nWelcome to the **Clan Quest** Discord Server!\n\nThis channel includes our rules and other information you might find useful. Please take a moment to read below.",
     "embed": {
       "title": "Who we are",
-      "description": "Clan Quest is an online community. Our clan consists of multiple \"Guilds\" which focus on specific games or interests. Each guild has its own channels. To join a guild, type a message in that guild's general chat or reach out to a member of that guild's \"Guild Council\" or the @Server Mod team.\n\nWe also have \"clan channels\" like <#367092181506326531> or <#805460335145910272> where members from every guild can interact. Administrative channels like this one, <#178788912842407936>, or <#851999371217993780>, serve special administrative functions.",
+      "description": "Clan Quest is an online community. Our clan consists of multiple \"Guilds\" which focus on specific games or interests. Each guild has its own channels. To join a guild, type a message in that guild's general chat or reach out to a member of that guild's \"Guild Council\" or the <@$181606045049683979> team.\n\nWe also have \"clan channels\" like <#367092181506326531> or <#805460335145910272> where members from every guild can interact. Administrative channels like this one, <#178788912842407936>, or <#851999371217993780>, serve special administrative functions.",
       "color": "#ECD77D"
     }
   },
   {
     "embed": {
       "title": "The team",
-      "description": "The Discord is managed by the @Server Mod team, who show as cyan.\nUsers who are members of any Guild's \"Honor Council\" show as blue; users who are members of any Guild's \"Guild Council\" show as red.\nThe Clan's leaders, the @Clan Council, show as yellow.",
+      "description": "The Discord is managed by the <@$181606045049683979> team, who show as cyan.\nUsers who are members of any Guild's \"Honor Council\" show as blue; users who are members of any Guild's \"Guild Council\" show as red.\nThe Clan's leaders, the <@$851999434665361449>, show as yellow.",
       "color": "#ECD77D"
     }
   },
   {
     "embed": {
       "title": "The rules",
-      "description": "Within this Discord, all Clan Quest rules apply. For more information on these rules, see our Constitution: https://clanquest.org/wiki/Constitution\n\nGenerally our rules can be summarized as asking that you follow Discord's platform rules, refrain from insulting or offensive behavior, avoid sensitive topics, do not spam any channel, deal with conflict in private, and avoid spoilers. Be respectful in our voice channels and do not record people without their permission, bully, argue, etc.\n\nYou __must__ use a recognizable name (usually your in-game name/IGN or clanquest.org username) on our Discord. Anyone on the @Clan Council or a @Server Mod can help you change it.",
+      "description": "Within this Discord, all Clan Quest rules apply. For more information on these rules, see our Constitution: https://clanquest.org/wiki/Constitution\n\nGenerally our rules can be summarized as asking that you follow Discord's platform rules, refrain from insulting or offensive behavior, avoid sensitive topics, do not spam any channel, deal with conflict in private, and avoid spoilers. Be respectful in our voice channels and do not record people without their permission, bully, argue, etc.\n\nYou __must__ use a recognizable name (usually your in-game name/IGN or clanquest.org username) on our Discord. Anyone on the <@$851999434665361449> or a <@$181606045049683979> can help you change it.",
       "color": "#ECD77D"
     }
   }
