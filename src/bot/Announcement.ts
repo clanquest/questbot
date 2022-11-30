@@ -16,11 +16,13 @@ export class Announcement {
   public embedDescription?: string;
   public embedUrl?: string;
   public embedImageUrl?: string;
+  public embedThumbnailUrl?: string;
 
   public toEmbed(): Discord.MessageEmbed {
     return new Discord.MessageEmbed({
       description: this.embedDescription,
       image: this.embedImageUrl ? { url: this.embedImageUrl } : undefined,
+      thumbnail: this.embedThumbnailUrl ? { url: this.embedThumbnailUrl } : undefined,
       title: this.embedTitle,
       url: this.embedUrl,
     });
