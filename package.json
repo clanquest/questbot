@@ -3,8 +3,9 @@
   "version": "0.2.0",
   "description": "Clan Quest Discord Bot",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "lint": "eslint -c .eslintrc.js --ext .ts src/",
+    "lint": "eslint -c .eslintrc.cjs --ext .ts src/",
     "watch": "tsc -w",
     "clean": "tsc --build --clean",
     "build": "npm run clean && tsc --build",
@@ -35,7 +36,6 @@
     "discord.js": "^14.7.1",
     "keyv": "^4.5.2",
     "mysql2": "^2.3.3",
-    "ora": "^6.1.2",
     "sqlite": "^4.1.2"
   }
 }

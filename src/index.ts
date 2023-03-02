@@ -1,5 +1,5 @@
 import { program } from "@commander-js/extra-typings";
-import { runBot } from "./run";
+import { runBot } from "./run.js";
 
 program
     .name("questbot")

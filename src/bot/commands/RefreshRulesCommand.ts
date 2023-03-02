@@ -1,14 +1,14 @@
 import { ChatInputCommandInteraction, PermissionFlagsBits , SlashCommandBuilder, TextChannel } from "discord.js";
-import { BotCommand } from "../BotCommand";
-import { rulesChannelKey, rulesMessagesKey } from "../constants";
-import { keyv } from "../keyv";
-import { Rules } from "../Rules";
+import { BotCommand } from "../BotCommand.js";
+import { rulesChannelKey, rulesMessagesKey } from "../constants.js";
+import { keyv } from "../keyv.js";
+import { Rules } from "../Rules.js";
 
 export class RefreshRulesCommand extends BotCommand {
   public get data() {
     return new SlashCommandBuilder()
         .setName("refreshrules")
-        .setDescription("Writes the rules to the channel as set by the rules channel command. Will edit existing messages if present.")
+        .setDescription("Writes the rules to the channel as set by the rules channel command.")
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
   }
 

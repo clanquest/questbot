@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, PermissionFlagsBits , SlashCommandBuilder } from "discord.js";
-import { BotCommand } from "../BotCommand";
-import { notifyChannelKey, rulesChannelKey } from "../constants";
-import { keyv } from "../keyv";
+import { BotCommand } from "../BotCommand.js";
+import { notifyChannelKey, rulesChannelKey } from "../constants.js";
+import { keyv } from "../keyv.js";
 
 export class SetChannelCommand extends BotCommand {
 

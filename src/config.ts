@@ -1,3 +1,7 @@
-import * as path from "path";
+import path from "path";
+import { fileURLToPath } from "url";
 
-export const settingsPath = path.join(__dirname, "settings.sqlite3");
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+
+export const settingsPath = path.join(dirname, "settings.sqlite3");

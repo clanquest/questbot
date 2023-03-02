@@ -1,12 +1,11 @@
 import { BaseInteraction, ChatInputCommandInteraction, Client, Events, GatewayIntentBits, REST, Routes, TextChannel } from "discord.js";
-import ora from "ora";
-import { IBotCommand, IBotConfig, ILogger } from "../api";
-import { AnnouncementListener } from "./AnnouncementListener";
-import { notifyChannelKey } from "./constants";
-import { keyv } from "./keyv";
-import { AnnouncementCommand } from "./commands/AnnouncementCommand";
-import { RefreshRulesCommand } from "./commands/RefreshRulesCommand";
-import { SetChannelCommand } from "./commands/SetChannelCommand";
+import { IBotCommand, IBotConfig, ILogger } from "../api.js";
+import { AnnouncementListener } from "./AnnouncementListener.js";
+import { notifyChannelKey } from "./constants.js";
+import { keyv } from "./keyv.js";
+import { AnnouncementCommand } from "./commands/AnnouncementCommand.js";
+import { RefreshRulesCommand } from "./commands/RefreshRulesCommand.js";
+import { SetChannelCommand } from "./commands/SetChannelCommand.js";
 
 const logger: ILogger = console;
 
@@ -19,17 +18,15 @@ export class QuestBot {
   ) {}
 
   public async start() {
-    const spinner = ora("Starting bot").start();
+    logger.info("Starting bot...");
 
     this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
     this.commands = this.collectCommands();
 
     this.client.on(Events.ClientReady, async () => {
-      spinner.text = "Initializing client";
       await this.initializeClient();
-      spinner.text = "Deploying commands";
       await this.deployCommands();
-      spinner.succeed("Bot started");
+      logger.info("Bot started. Running until interrupted.");
     })
 
     this.client.on(Events.InteractionCreate, async (interaction: BaseInteraction) => {
@@ -45,6 +42,8 @@ export class QuestBot {
     if (!this.client) {
       throw new Error("Client was marked as ready, but client field wasn't set.");
     }
+
+    logger.info("  Initializing client...");
 
     if (this.cfg.activity) {
       this.client.user?.setActivity(this.cfg.activity);
@@ -64,6 +63,9 @@ export class QuestBot {
       await (this.client?.channels.cache.get(this.cfg.listenChannel) as TextChannel)?.messages.fetch();
       announcementListener.start(this.client);
     }
+
+
+    logger.info("  Client initialized.");
   }
 
   private collectCommands(): Map<string, IBotCommand> {
@@ -84,11 +86,11 @@ export class QuestBot {
     const rest = new REST({ version: "10" }).setToken(this.cfg.token);
     const commandList = [...this.commands.values()].map(cmd => cmd.data.toJSON());
 
-    logger.info(`Started refreshing ${ commandList.length } application commands.`);
+    logger.info(`  Started refreshing ${ commandList.length } application commands...`);
 
     await rest.put(Routes.applicationCommands(this.cfg.clientId), { body: commandList });
 
-    logger.info(`Successfully refreshed ${ commandList.length } application commands.`);
+    logger.info(`  Successfully refreshed ${ commandList.length } application commands.`);
   }
 
   private async handleCommand(interaction: ChatInputCommandInteraction) {

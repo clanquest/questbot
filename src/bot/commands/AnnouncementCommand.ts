@@ -1,6 +1,6 @@
 import {  ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from "discord.js";
-import { Announcement } from "../Announcement";
-import { BotCommand } from "../BotCommand";
+import { Announcement } from "../Announcement.js";
+import { BotCommand } from "../BotCommand.js";
 
 export class AnnouncementCommand extends BotCommand {
   private readonly modificationSubcommands = [ "message", "title", "description", "url", "imageurl", "thumbnailurl" ];
@@ -21,32 +21,50 @@ export class AnnouncementCommand extends BotCommand {
                 .setDescription("The channel to publish the announcement in")
                 .setRequired(true))
             .addBooleanOption(option => option
-                .setName("mentionEveryone")
+                .setName("everyone")
                 .setDescription("Whether @everyone should be mentioned")))
         .addSubcommand(subcommand => subcommand
             .setName("message")
             .setDescription("Updates the message of the announcement")
-            .addStringOption(option => option.setName("value").setRequired(true)))
+            .addStringOption(option => option
+                .setName("value")
+                .setDescription("The value to use")
+                .setRequired(true)))
         .addSubcommand(subcommand => subcommand
             .setName("title")
             .setDescription("Updates the title of the announcement")
-            .addStringOption(option => option.setName("value").setRequired(true)))
+            .addStringOption(option => option
+                .setName("value")
+                .setDescription("The value to use")
+                .setRequired(true)))
         .addSubcommand(subcommand => subcommand
             .setName("description")
             .setDescription("Updates the description of the announcement")
-            .addStringOption(option => option.setName("value").setRequired(true)))
+            .addStringOption(option => option
+                .setName("value")
+                .setDescription("The value to use")
+                .setRequired(true)))
         .addSubcommand(subcommand => subcommand
             .setName("url")
             .setDescription("Updates the url of the announcement")
-            .addStringOption(option => option.setName("value").setRequired(true)))
+            .addStringOption(option => option
+                .setName("value")
+                .setDescription("The value to use")
+                .setRequired(true)))
         .addSubcommand(subcommand => subcommand
             .setName("imageurl")
             .setDescription("Updates the image url of the announcement")
-            .addStringOption(option => option.setName("value").setRequired(true)))
+            .addStringOption(option => option
+                .setName("value")
+                .setDescription("The value to use")
+                .setRequired(true)))
         .addSubcommand(subcommand => subcommand
             .setName("thumbnailurl")
             .setDescription("Updates the thumbnail url of the announcement")
-            .addStringOption(option => option.setName("value").setRequired(true)));
+            .addStringOption(option => option
+                .setName("value")
+                .setDescription("The value to use")
+                .setRequired(true)));
   }
 
   public override async execute(interaction: ChatInputCommandInteraction) {
@@ -71,16 +89,27 @@ export class AnnouncementCommand extends BotCommand {
     if (subcommand === "announce") {
       await this.announce(interaction, announcement);
       return;
-    } else if (this.modificationSubcommands.indexOf(subcommand) >= 0) {
+    }
+
+    if (this.modificationSubcommands.indexOf(subcommand) >= 0) {
       const value = interaction.options.getString("value", true);
       this.updateAnnouncement(subcommand, value, announcement);
-      await this.updatePreview(announcement)
+      try {
+        await this.updatePreview(announcement);
+        await interaction.reply("Preview updated.");
+        return;
+      }
+      catch (error) {
+        await interaction.reply("Unable to update previous preview, attempting to create a new preview.");
+        announcement.startInteraction = interaction;
+        await this.updatePreview(announcement);
+      }
     }
   }
 
   private async announce(interaction: ChatInputCommandInteraction, announcement: Announcement) {
     const channel = interaction.options.getChannel("channel", true);
-    const everyone = interaction.options.getBoolean("mentionEveryone", false) ?? false;
+    const everyone = interaction.options.getBoolean("everyone", false) ?? false;
     const message = `${everyone ? "@everyone " : ""}${announcement.message ? announcement.message : ""}`;
     const textChannel = channel as TextChannel | undefined;
     if (!textChannel) {

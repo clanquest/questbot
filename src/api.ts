@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SharedNameAndDescription, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, HexColorString, SharedNameAndDescription, SlashCommandBuilder } from "discord.js";
 
 export interface IBotConfig {
   clientId: string;
@@ -8,6 +8,16 @@ export interface IBotConfig {
   db?: string;
   dbUser?: string;
   dbPassword?: string;
+}
+
+export interface IRuleConfig {
+  readonly sections: IRuleSection[];
+}
+
+export interface IRuleSection {
+  readonly title: string;
+  readonly description: string;
+  readonly color: HexColorString;
 }
 
 export interface IBotCommand {

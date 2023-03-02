@@ -1,6 +1,6 @@
 import { Client, Events, GuildChannel, Message, PartialMessage, TextChannel } from "discord.js";
 import * as MySQL from "mysql2/promise";
-import { IBotConfig } from "../api";
+import { IBotConfig } from "../api.js";
 
 export class AnnouncementListener {
     private announcementChannel: string;

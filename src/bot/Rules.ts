@@ -1,7 +1,8 @@
-import { BaseMessageOptions, Message, TextChannel } from "discord.js";
+import { EmbedBuilder, Message, TextChannel } from "discord.js";
+import { IRuleConfig, IRuleSection } from "../api.js";
 
 export class Rules {
-  public static initialize(rules: BaseMessageOptions[]) {
+  public static initialize(rules: IRuleConfig) {
     Rules.instance = new Rules(rules);
   }
 
@@ -12,42 +13,47 @@ export class Rules {
 
   private static instance: Rules;
 
-  private rules: BaseMessageOptions[] = [];
-
-  private constructor(rules: BaseMessageOptions[]) {
-    this.rules = rules;
-  }
+  private constructor(private rules: IRuleConfig) {}
 
   private async write(channel: TextChannel, existingMessages: Message[])
       : Promise<Message[]> {
-    for (let i = 0; i < Math.min(this.rules.length, existingMessages.length); i++) {
+    const sections = this.rules.sections;
+
+    for (let i = 0; i < Math.min(sections.length, existingMessages.length); i++) {
       await existingMessages[i].edit({
         allowedMentions: {parse: ["roles"]},
-        content: this.rules[i].content,
-        embeds: this.rules[i].embeds,
+        content: "",
+        embeds: [this.toEmbed(sections[i])],
       });
     }
 
-    if (this.rules.length > existingMessages.length) {
+    if (sections.length > existingMessages.length) {
       const output = Array.from(existingMessages);
-      for (let i = existingMessages.length; i < this.rules.length; i++) {
+      for (let i = existingMessages.length; i < sections.length; i++) {
         const msg = await channel.send({
           allowedMentions: {parse: ["roles"]},
-          content: this.rules[i].content,
-          embeds: this.rules[i].embeds,
+          content: "",
+          embeds: [this.toEmbed(sections[i])],
         });
         output.push(msg);
       }
       return output;
     }
 
-    if (this.rules.length < existingMessages.length) {
-      for (let i = this.rules.length; i < existingMessages.length; i++) {
+    if (sections.length < existingMessages.length) {
+      for (let i = sections.length; i < existingMessages.length; i++) {
         await existingMessages[i].delete();
       }
-      return existingMessages.slice(0, this.rules.length);
+      return existingMessages.slice(0, sections.length);
     }
 
     return existingMessages;
+  }
+
+  private toEmbed(section: IRuleSection): EmbedBuilder {
+    return new EmbedBuilder()
+        .setColor(section.color)
+        .setTitle(section.title)
+        .setDescription(section.description);
   }
 }
