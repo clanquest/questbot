@@ -2,8 +2,6 @@ module.exports = {
   apps : [{
     name: 'QuestBot',
     script: './dist/index.js',
-
-    args: 'runBot',
     instances: 1,
     autorestart: true,
     watch: false,
@@ -22,7 +20,7 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'https://github.com/clanquest/questbot.git',
       path : '/home/node/questbot',
-      'post-deploy' : 'npm install && npm run-script build && pm2 reload ecosystem.config.js --env production'
+      'post-deploy' : 'npm ci && npm run build && pm2 reload ecosystem.config.js --env production'
     }
   }
 };
