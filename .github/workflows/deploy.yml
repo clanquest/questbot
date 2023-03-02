@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install pm2
+        run: npm install -g pm2
+
+      - name: Add known host
+        run: echo 'clanquest.org,45.33.99.4 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBcUo9JpxttuJV5AHthqze1F/DrlfDinZPSY7ex9nxy1D28z2lt8AIyYImHhK4JWBId6066fvXM7lN3CEJyEE5k=' >> ~/.ssh/known_hosts
+
+      - name: Deploy to production
+        run: pm2 deploy ecosystem.config.js production

@@ -1,0 +1,15 @@
+name: Deploy to production
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      node-version: 18.x
+
+  deploy:
+    needs: build
+    uses: ./.github/workflows/deploy.yml
