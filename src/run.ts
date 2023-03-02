@@ -7,8 +7,10 @@ import { Rules } from "./bot/Rules";
 const logger: ILogger = console;
 
 export function runBot() {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   let cfg = require("./../bot.json") as IBotConfig;
   try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const cfgProd = require("./../bot.prod.json") as IBotConfig;
     cfg = { ...cfg, ...cfgProd };
   } catch {
@@ -17,6 +19,7 @@ export function runBot() {
 
   keyv.on("error", err => logger.error("Keyv connection error: ", err));
 
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const rules = require("./../rules.json") as BaseMessageOptions[];
   Rules.initialize(rules);
 

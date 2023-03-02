@@ -69,7 +69,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     return;
   } else if (modificationSubcommands.indexOf(subcommand) >= 0) {
     const value = interaction.options.getString("value", true);
-    await updateAnnouncement(subcommand, value, announcement);
+    updateAnnouncement(subcommand, value, announcement);
     await updatePreview(announcement)
   }
 }
@@ -86,7 +86,7 @@ async function announce(interaction: ChatInputCommandInteraction, announcement: 
   await textChannel.send({ content: message, embeds: [announcement.toEmbed()] });
 }
 
-async function updateAnnouncement(subcommand: string, value: string, announcement: Announcement): Promise<void> {
+function updateAnnouncement(subcommand: string, value: string, announcement: Announcement): void {
   switch (subcommand) {
     case "message":
       announcement.message = value;

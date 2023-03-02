@@ -31,6 +31,6 @@ export class Announcement {
       .setURL(this.embedUrl ?? null);
   }
 
-  // tslint:disable-next-line: no-empty
-  private Announcement() {}
+  // eslint-disable-next-line no-empty, no-empty-function, @typescript-eslint/no-empty-function
+  private constructor() {}
 }

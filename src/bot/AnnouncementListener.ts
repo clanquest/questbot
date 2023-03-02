@@ -1,4 +1,4 @@
-import { Client, GuildChannel, Message, PartialMessage, TextChannel } from "discord.js";
+import { Client, Events, GuildChannel, Message, PartialMessage, TextChannel } from "discord.js";
 import * as MySQL from "mysql2/promise";
 import { IBotConfig } from "../api";
 
@@ -18,8 +18,8 @@ export class AnnouncementListener {
      *
      * @param client Discord client to operate on
      */
-    public async start(client: Client) {
-        client.on("message", async (message) => {
+    public start(client: Client) {
+        client.on(Events.MessageCreate, async (message) => {
             // if no announcement channel set, don't do anything.
             if (message.channel.id !== this.announcementChannel) {
                 return;
@@ -32,7 +32,7 @@ export class AnnouncementListener {
                 user: this.cfg.dbUser,
             })
             .catch((err) => {
-                throw new Error("Unable to connect to database. " + err);
+                throw new Error("Unable to connect to database. ", { cause: err });
             });
             const announcementMessage = await this.getAnnouncementMessage(message);
             const embedHref = await this.getEmbedHref(message);
@@ -44,11 +44,11 @@ export class AnnouncementListener {
             (await db).execute("INSERT INTO cq_announcements (id, message, author, timestamp, embed_href) VALUES (?, ?, ?, ?, ?)",
                 [message.id, announcementMessage, messageAuthor, message.createdTimestamp, embedHref])
             .catch((err) => {
-                throw new Error("Unable to insert into database: " + err);
+                throw new Error("Unable to insert into database: ", { cause: err });
              });
         });
 
-        client.on("messageDelete", async (deletedMessage) => {
+        client.on(Events.MessageDelete, async (deletedMessage) => {
             // if no announcement channel set, don't do anything.
             if (deletedMessage.channel.id !== this.announcementChannel) {
                 return;
@@ -61,13 +61,13 @@ export class AnnouncementListener {
                 user: this.cfg.dbUser,
             })
             .catch((err) => {
-                throw new Error("Unable to connect to database. " + err);
+                throw new Error("Unable to connect to database. ", { cause: err });
             });
 
-            (await db).execute("DELETE FROM cq_announcements WHERE id = ?", [deletedMessage.id]);
+            await (await db).execute("DELETE FROM cq_announcements WHERE id = ?", [deletedMessage.id]);
         });
 
-        client.on("messageUpdate", async (oldMessage, newMessage) => {
+        client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
             // if no announcement channel set, don't do anything.
             if (newMessage.channel.id !== this.announcementChannel) {
                 return;
@@ -80,7 +80,7 @@ export class AnnouncementListener {
                 user: this.cfg.dbUser,
             })
             .catch((err) => {
-                throw new Error("Unable to connect to database. " + err);
+                throw new Error("Unable to connect to database. ", { cause: err });
             });
             const announcementMessage = await this.getAnnouncementMessage(newMessage);
             const embedHref = await this.getEmbedHref(newMessage);
@@ -88,7 +88,7 @@ export class AnnouncementListener {
             (await db).execute("UPDATE cq_announcements SET message = ?, embed_href = ? WHERE id = ?",
                 [announcementMessage, embedHref, oldMessage.id])
             .catch((err) => {
-                throw new Error("Unable to update database: " + err);
+                throw new Error("Unable to update database: ", { cause: err });
             });
         });
     }
@@ -99,7 +99,7 @@ export class AnnouncementListener {
      * @param message Discord message announcement to parse for contents.
      */
     private async getAnnouncementMessage(message: Message | PartialMessage): Promise<string> {
-        const fullMessage = message.partial ? await message.fetch() : message as Message;
+        const fullMessage = message.partial ? await message.fetch() : message;
 
         // get the message contents
         let announcementMessage = this.parseMessageMentions(fullMessage);
@@ -114,7 +114,7 @@ export class AnnouncementListener {
      * @param message Discord message announcement to parse for a hyperlink.
      */
     private async getEmbedHref(message: Message | PartialMessage): Promise<string | null> {
-        const fullMessage = message.partial ? await message.fetch() : message as Message;
+        const fullMessage = message.partial ? await message.fetch() : message;
 
         let embedHref = null;
         // if we have embeds and the url isn't blank, store it
@@ -170,7 +170,7 @@ export class AnnouncementListener {
             return "";
         }
 
-        let embedsParsed: string = "";
+        let embedsParsed = "";
         const clientChannels = message.client.channels.cache;
         const clientMembers = message.guild?.members.cache;
         const clientRoles = message.guild?.roles.cache;
