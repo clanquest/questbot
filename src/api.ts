@@ -19,10 +19,12 @@ export interface IBotCommand {
 
 export interface ISerializableSlashCommand extends SharedNameAndDescription, Pick<SlashCommandBuilder, "toJSON"> {}
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ILoggerMethod {
   (msg: string, ...args: any[]): void;
   (obj: object, msg?: string, ...args: any[]): void;
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export interface ILogger {
   debug: ILoggerMethod;

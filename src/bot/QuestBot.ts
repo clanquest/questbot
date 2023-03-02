@@ -101,7 +101,7 @@ export class QuestBot {
 
     try {
       await command.execute(interaction);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Error executing command", error);
       if (interaction.replied || interaction.deferred) {
         await interaction.followUp({ content: "There was an error while executing this command!", ephemeral: true });
