@@ -1,30 +1,30 @@
-import * as Discord from "discord.js";
+import { BaseMessageOptions, Message, TextChannel } from "discord.js";
 
 export class Rules {
-  public static initialize(rules: Discord.MessageOptions[]) {
+  public static initialize(rules: BaseMessageOptions[]) {
     Rules.instance = new Rules(rules);
   }
 
-  public static writeTo(channel: Discord.TextChannel, existingMessages: Discord.Message[])
-      : Promise<Discord.Message[]> {
+  public static writeTo(channel: TextChannel, existingMessages: Message[])
+      : Promise<Message[]> {
     return this.instance.write(channel, existingMessages);
   }
 
   private static instance: Rules;
 
-  private rules: Discord.MessageOptions[] = [];
+  private rules: BaseMessageOptions[] = [];
 
-  private constructor(rules: Discord.MessageOptions[]) {
+  private constructor(rules: BaseMessageOptions[]) {
     this.rules = rules;
   }
 
-  private async write(channel: Discord.TextChannel, existingMessages: Discord.Message[])
-      : Promise<Discord.Message[]> {
+  private async write(channel: TextChannel, existingMessages: Message[])
+      : Promise<Message[]> {
     for (let i = 0; i < Math.min(this.rules.length, existingMessages.length); i++) {
       await existingMessages[i].edit({
         allowedMentions: {parse: ["roles"]},
         content: this.rules[i].content,
-        embed: this.rules[i].embed,
+        embeds: this.rules[i].embeds,
       });
     }
 
@@ -34,7 +34,7 @@ export class Rules {
         const msg = await channel.send({
           allowedMentions: {parse: ["roles"]},
           content: this.rules[i].content,
-          embed: this.rules[i].embed,
+          embeds: this.rules[i].embeds,
         });
         output.push(msg);
       }

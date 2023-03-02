@@ -1,15 +1,19 @@
-import * as Discord from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder, Guild } from "discord.js";
 
 export class Announcement {
-  public static startNew(guild: Discord.Guild): void {
-    this.instances.set(guild.id, new Announcement());
+  public static startNew(guild: Guild): Announcement {
+    const announcement = new Announcement();
+    this.instances.set(guild.id, announcement);
+    return announcement;
   }
 
-  public static forGuild(guild: Discord.Guild): Announcement | undefined {
+  public static forGuild(guild: Guild): Announcement | undefined {
     return Announcement.instances.get(guild.id);
   }
 
   private static instances: Map<string, Announcement> = new Map();
+
+  public startInteraction?: ChatInputCommandInteraction;
 
   public message?: string;
   public embedTitle?: string;
@@ -18,14 +22,13 @@ export class Announcement {
   public embedImageUrl?: string;
   public embedThumbnailUrl?: string;
 
-  public toEmbed(): Discord.MessageEmbed {
-    return new Discord.MessageEmbed({
-      description: this.embedDescription,
-      image: this.embedImageUrl ? { url: this.embedImageUrl } : undefined,
-      thumbnail: this.embedThumbnailUrl ? { url: this.embedThumbnailUrl } : undefined,
-      title: this.embedTitle,
-      url: this.embedUrl,
-    });
+  public toEmbed(): EmbedBuilder {
+    return new EmbedBuilder()
+      .setDescription(this.embedDescription ?? null)
+      .setImage(this.embedImageUrl ?? null)
+      .setThumbnail(this.embedThumbnailUrl ?? null)
+      .setTitle(this.embedTitle ?? null)
+      .setURL(this.embedUrl ?? null);
   }
 
   // tslint:disable-next-line: no-empty

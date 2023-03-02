@@ -1,19 +1,11 @@
-import * as Program from "commander";
-import { ILogger } from "./api";
-import { runBot, sendHook } from "./commands";
+import { program } from "@commander-js/extra-typings";
+import { runBot } from "./run";
 
-Program
+program
+    .name("questbot")
+    .description("CLI to run questbot for the Clan Quest Discord")
     .version("0.2");
 
-Program
-    .command("runBot")
-    .alias("bot, b")
-    .description("Run QuestBot using the configurion in bot.prod.json.")
-    .action(runBot);
+program.parse();
 
-if (!process.argv.slice(2).length) {
-  Program.outputHelp();
-  process.exit();
-}
-
-Program.parse(process.argv);
+runBot();

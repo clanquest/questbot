@@ -1,8 +1,9 @@
-import * as Discord from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 
 export interface IBotConfig {
   commandPrefix: string;
   token: string;
+  clientId: string;
   owner?: string | string[] | Set<string>;
   activity?: string;
   listenChannel?: string;
@@ -12,9 +13,8 @@ export interface IBotConfig {
 }
 
 export interface IBotCommand {
-  name: string;
-  helpText?: string;
-  execute(message: Discord.Message): void;
+  data: SlashCommandBuilder;
+  execute(interaction: ChatInputCommandInteraction): Promise<void>;
 }
 
 export interface ILoggerMethod {

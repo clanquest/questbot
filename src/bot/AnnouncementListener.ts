@@ -1,4 +1,4 @@
-import * as Discord from "discord.js";
+import { Client, GuildChannel, Message, PartialMessage, TextChannel } from "discord.js";
 import * as MySQL from "mysql2/promise";
 import { IBotConfig } from "../api";
 
@@ -18,7 +18,7 @@ export class AnnouncementListener {
      *
      * @param client Discord client to operate on
      */
-    public async start(client: Discord.Client) {
+    public async start(client: Client) {
         client.on("message", async (message) => {
             // if no announcement channel set, don't do anything.
             if (message.channel.id !== this.announcementChannel) {
@@ -98,8 +98,8 @@ export class AnnouncementListener {
      *
      * @param message Discord message announcement to parse for contents.
      */
-    private async getAnnouncementMessage(message: Discord.Message | Discord.PartialMessage): Promise<string> {
-        const fullMessage = message.partial ? await message.fetch() : message as Discord.Message;
+    private async getAnnouncementMessage(message: Message | PartialMessage): Promise<string> {
+        const fullMessage = message.partial ? await message.fetch() : message as Message;
 
         // get the message contents
         let announcementMessage = this.parseMessageMentions(fullMessage);
@@ -113,8 +113,8 @@ export class AnnouncementListener {
      *
      * @param message Discord message announcement to parse for a hyperlink.
      */
-    private async getEmbedHref(message: Discord.Message | Discord.PartialMessage): Promise<string | null> {
-        const fullMessage = message.partial ? await message.fetch() : message as Discord.Message;
+    private async getEmbedHref(message: Message | PartialMessage): Promise<string | null> {
+        const fullMessage = message.partial ? await message.fetch() : message as Message;
 
         let embedHref = null;
         // if we have embeds and the url isn't blank, store it
@@ -128,17 +128,20 @@ export class AnnouncementListener {
     /**
      * Parse mentions found in a message that appears to our AnnouncementListener
      *
-     * @param message Discord.Message - Message to parse mentions from
+     * @param message Message - Message to parse mentions from
      * @returns string containing parsed message
      */
-    private parseMessageMentions(message: Discord.Message): string {
+    private parseMessageMentions(message: Message): string {
         let messageParsed: string = message.content;
         const channelMentions = message.mentions.channels;
         const memberMentions = message.mentions.members;
         const roleMentions = message.mentions.roles;
 
         channelMentions.each((channel) => {
-            messageParsed = messageParsed.replace("<#" + channel.id + ">", "#" + channel.name);
+            const guildChannel = channel as GuildChannel | undefined;
+            if (guildChannel) {
+                messageParsed = messageParsed.replace("<#" + guildChannel.id + ">", "#" + guildChannel.name);
+            }
         });
 
         roleMentions.each((role) => {
@@ -162,7 +165,7 @@ export class AnnouncementListener {
      * @param message Discord.Message - Message to parse embeds from
      * @returns string containing parsed embeds to be attached to a message.
      */
-    private parseMessageEmbedMentions(message: Discord.Message): string {
+    private parseMessageEmbedMentions(message: Message): string {
         if (message.embeds.length < 1) {
             return "";
         }
@@ -177,8 +180,8 @@ export class AnnouncementListener {
 
             let embedDescription: string = embed.description as string;
             clientChannels.each((channel) => {
-                if (channel.type === "text") {
-                    const textChannel = channel as Discord.TextChannel;
+                const textChannel = channel as TextChannel;
+                if (textChannel) {
                     embedDescription = embedDescription.replace("<#" + textChannel.id + ">", "#" + textChannel.name);
                 }
             });
