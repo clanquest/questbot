@@ -1,10 +1,8 @@
 import { ChatInputCommandInteraction, SharedNameAndDescription, SlashCommandBuilder } from "discord.js";
 
 export interface IBotConfig {
-  commandPrefix: string;
-  token: string;
   clientId: string;
-  owner?: string | string[] | Set<string>;
+  token: string;
   activity?: string;
   listenChannel?: string;
   db?: string;
