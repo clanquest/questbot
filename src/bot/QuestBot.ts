@@ -1,11 +1,12 @@
 import { BaseInteraction, ChatInputCommandInteraction, Client, Events, GatewayIntentBits, REST, Routes, TextChannel } from "discord.js";
 import ora from "ora";
-import * as fs from "fs";
-import * as path from "path";
 import { IBotCommand, IBotConfig, ILogger } from "../api";
 import { AnnouncementListener } from "./AnnouncementListener";
 import { notifyChannelKey } from "./constants";
 import { keyv } from "./keyv";
+import { AnnouncementCommand } from "./commands/AnnouncementCommand";
+import { RefreshRulesCommand } from "./commands/RefreshRulesCommand";
+import { SetChannelCommand } from "./commands/SetChannelCommand";
 
 const logger: ILogger = console;
 
@@ -17,13 +18,13 @@ export class QuestBot {
     private cfg: IBotConfig
   ) {}
 
-  public start(): void {
+  public async start() {
     const spinner = ora("Starting bot").start();
 
     this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
     this.commands = this.collectCommands();
 
-    this.client.on(Events.ClientReady, async() => {
+    this.client.on(Events.ClientReady, async () => {
       spinner.text = "Initializing client";
       await this.initializeClient();
       spinner.text = "Deploying commands";
@@ -37,10 +38,10 @@ export class QuestBot {
       await this.handleCommand(interaction);
     });
 
-    this.client.login(this.cfg.token);
+    await this.client.login(this.cfg.token);
   }
 
-  private async initializeClient(): Promise<void> {
+  private async initializeClient() {
     if (!this.client) {
       throw new Error("Client was marked as ready, but client field wasn't set.");
     }
@@ -60,31 +61,22 @@ export class QuestBot {
       const announcementListener = new AnnouncementListener(this.cfg.listenChannel, this.cfg);
 
       // cache the messages in our channel
-      (this.client?.channels.cache.get(this.cfg.listenChannel) as TextChannel)?.messages.fetch();
+      await (this.client?.channels.cache.get(this.cfg.listenChannel) as TextChannel)?.messages.fetch();
       announcementListener.start(this.client);
     }
   }
 
   private collectCommands(): Map<string, IBotCommand> {
-    const commands = new Map<string, IBotCommand>();
+    const commands = [
+      new AnnouncementCommand(),
+      new RefreshRulesCommand(),
+      new SetChannelCommand(),
+    ];
 
-    const commandsPath = path.join(__dirname, "commands");
-    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
-
-    for (const file of commandFiles) {
-      const filePath = path.join(commandsPath, file);
-      const command = require(filePath);
-      if ("data" in command && "execute" in command) {
-        commands.set(command.data.name, command);
-      } else {
-        logger.warn(`The command at ${filePath} is missing a required "data" or "execute" property.`);
-      }
-    }
-
-    return commands;
+    return new Map(commands.map(cmd => [cmd.data.name, cmd]));
   }
 
-  private async deployCommands(): Promise<void> {
+  private async deployCommands() {
     if (!this.client) {
       throw new Error("Client was marked as ready, but client field wasn't set.");
     }
@@ -99,8 +91,8 @@ export class QuestBot {
     logger.info(`Successfully refreshed ${ commandList.length } application commands.`);
   }
 
-  private async handleCommand(interaction: ChatInputCommandInteraction): Promise<void> {
-    const command = this.commands.get(interaction.commandName) as IBotCommand | undefined;
+  private async handleCommand(interaction: ChatInputCommandInteraction) {
+    const command = this.commands.get(interaction.commandName);
 
     if (!command) {
       logger.error(`No command matching ${interaction.commandName} was found.`);
@@ -110,11 +102,11 @@ export class QuestBot {
     try {
       await command.execute(interaction);
     } catch (error: any) {
-      logger.error(error);
+      logger.error("Error executing command", error);
       if (interaction.replied || interaction.deferred) {
-        await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+        await interaction.followUp({ content: "There was an error while executing this command!", ephemeral: true });
       } else {
-        await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        await interaction.reply({ content: "There was an error while executing this command!", ephemeral: true });
       }
     }
   }

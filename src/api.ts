@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, SharedNameAndDescription, SlashCommandBuilder } from "discord.js";
 
 export interface IBotConfig {
   commandPrefix: string;
@@ -13,9 +13,11 @@ export interface IBotConfig {
 }
 
 export interface IBotCommand {
-  data: SlashCommandBuilder;
+  readonly data: ISerializableSlashCommand;
   execute(interaction: ChatInputCommandInteraction): Promise<void>;
 }
+
+export interface ISerializableSlashCommand extends SharedNameAndDescription, Pick<SlashCommandBuilder, "toJSON"> {}
 
 export interface ILoggerMethod {
   (msg: string, ...args: any[]): void;

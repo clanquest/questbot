@@ -8,4 +8,4 @@ program
 
 program.parse();
 
-runBot();
+await runBot();

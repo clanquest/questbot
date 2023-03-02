@@ -6,7 +6,7 @@ import { Rules } from "./bot/Rules";
 
 const logger: ILogger = console;
 
-export function runBot() {
+export async function runBot() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   let cfg = require("./../bot.json") as IBotConfig;
   try {
@@ -24,5 +24,5 @@ export function runBot() {
   Rules.initialize(rules);
 
   const bot = new QuestBot(cfg);
-  bot.start();
+  await bot.start();
 }
