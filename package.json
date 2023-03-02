@@ -4,7 +4,7 @@
   "description": "Clan Quest Discord Bot",
   "main": "dist/index.js",
   "scripts": {
-    "clean": "ts-clean -d dist",
+    "clean": "mkdir -p dist && ts-clean -d dist",
     "lint": "eslint -c .eslintrc.js --ext .ts src/",
     "watch": "tsc -w",
     "build": "npm run clean && tsc",
