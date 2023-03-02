@@ -1,8 +1,5 @@
 import * as Discord from "discord.js";
 
-export type WebHookOptions = Discord.MessageAdditions |
-  (Discord.WebhookMessageOptions & { split?: false | undefined; });
-
 export interface IBotConfig {
   commandPrefix: string;
   token: string;
@@ -18,13 +15,6 @@ export interface IBotCommand {
   name: string;
   helpText?: string;
   execute(message: Discord.Message): void;
-}
-
-export interface IWebhookConfig {
-  id: string;
-  token: string;
-  message: Discord.StringResolvable;
-  messageOptions?: Discord.MessageAdditions;
 }
 
 export interface ILoggerMethod {

@@ -5,7 +5,6 @@ import * as sqlite from "sqlite";
 import { IBotConfig, ILogger, IWebhookConfig } from "./api";
 import { QuestBot } from "./bot/QuestBot";
 import { Rules } from "./bot/Rules";
-import { DiscordWebhook } from "./webhooks/DiscordWebhook";
 
 const logger: ILogger = console;
 
@@ -32,19 +31,4 @@ async function getSettingsProvider() {
 
 async function openDatabase() {
   return sqlite.open(path.join(__dirname, "settings.sqlite3"));
-}
-
-export function sendHook() {
-  let cfg = require("./../webhook.json") as IWebhookConfig;
-  try {
-    const cfgProd = require("./../webhook.prod.json") as IWebhookConfig;
-    cfg = { ...cfg, ...cfgProd };
-  } catch {
-    logger.info("Create a 'webhook.prod.json' file to use actual settings for the bot.");
-  }
-  const hook = new DiscordWebhook(cfg, logger);
-
-  hook.send(cfg.message, cfg.messageOptions === undefined ? {} : cfg.messageOptions)
-      .then(logger.info)
-      .catch(logger.error);
 }
