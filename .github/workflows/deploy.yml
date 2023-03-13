@@ -29,4 +29,4 @@ jobs:
         run: echo 'clanquest.org,45.33.99.4 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBcUo9JpxttuJV5AHthqze1F/DrlfDinZPSY7ex9nxy1D28z2lt8AIyYImHhK4JWBId6066fvXM7lN3CEJyEE5k=' >> ~/.ssh/known_hosts
 
       - name: Deploy to production
-        run: pm2 deploy ecosystem.config.js production
+        run: pm2 deploy ecosystem.config.cjs production
