@@ -1,30 +1,24 @@
-[
-  {
-    "embed": {
+{
+  "sections": [
+    {
       "title": "Welcome",
       "description": "Welcome to the Clan Quest Community Discord Server.\n\nPlease read this channel for our rules and other information you might find helpful.",
       "color": "#ECD77D"
-    }
-  },
-  {
-    "embed": {
+    },
+    {
       "title": "Who we are",
       "description": "As an online community, Clan Quest consists of multiple \"Guilds\" focusing on different games and interests. Each guild has its own channels for their members to communicate about their game. You may join one, several, or all guilds. To join a specific guild, visit the guild's general chat and contact a member of the guild's \"Guild Council\". Membership in a Guild is not necessary to interact in a guild's channel(s).\n\nBesides guild channels, we have \"clan channels\" like <#367092181506326531> or <#805460335145910272> where members from every guild can interact.\n\nChannels like <#178788912842407936> or <#841294646805004288> serve administrative functions.",
       "color": "#ECD77D"
-    }
-  },
-  {
-    "embed": {
+    },
+    {
       "title": "The team",
       "description": "The Server is managed by:\nThe <@&181606045049683979> team, who show as cyan; and\nThe Clan's leaders, the <@&132428327079247872>, who show as yellow.\n\nMembers of any Guild's \"Honor Council\" show as blue (e.g. the <@&851973783770234910>).\n Members of any Guild's \"Guild Council\" show as red (e.g. the <@&421735132823814144>).",
       "color": "#ECD77D"
-    }
-  },
-  {
-    "embed": {
+    },
+    {
       "title": "The rules",
       "description": "Within our server, all Clan Quest rules apply. Generally our rules can be summarized as asking that you follow Discord's platform rules, refrain from insulting or offensive behavior, avoid sensitive topics, do not spam, deal with conflict in private, and avoid spoilers. You are expected to act respectfully in our voice channels and not record people without their permission.\n\nFor more information on our rules, see our Constitution: https://clanquest.org/wiki/Constitution\n\nYou aren’t expected to know these, but for transparency, as a community server, we have policies in place for our staff. Review staff policies at:\nhttps://clanquest.org/wiki/Clan_Discord/Permissions\nhttps://clanquest.org/wiki/Clan_Discord/Operations\nhttps://clanquest.org/wiki/Announcement_Policies\n\nYou must use a recognizable name (usually your clanquest.org username or sometimes an in-game name) on our Discord. If you need your name changed, the <@&132428327079247872> or <@&181606045049683979> team can change it.\n\nIn <#841294646805004288>, you can self-assign special roles to see announcements relating to events, news, etc.",
       "color": "#ECD77D"
     }
-  }
-]
+  ]
+}

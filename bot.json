@@ -1,6 +1,5 @@
 {
-  "commandPrefix": "!",
+  "clientId": "application_id_from_dev_portal",
   "token": "add_bot_secret_here",
-  "owner": ["discord_user_id"],
   "activity": ""
 }

@@ -4,10 +4,10 @@ QuestBot is a Discord bot based on [discord.js](https://discord.js.org/) built t
 
 ## Run the bot
 
-To run this bot, you need to have [Node.js](https://nodejs.org/en/) 12.0.0+ installed. Once you have cloned the repository you should first install the dependencies:
+To run this bot, you need to have [Node.js](https://nodejs.org/en/) 16.9.0+ installed. Once you have cloned the repository you should first install the dependencies:
 
 ```
-npm install
+npm ci
 ```
 
 You also need a global dependency on the TypeScript compiler:
@@ -19,17 +19,8 @@ npm install -g typescript
 Then make a copy of `bot.json` called `bot.prod.json` and fill in the correct values. These will be used when starting the bot. To compile and run the bot, run:
 
 ```
-npm run-script build
-npm run-script start runBot
-```
-
-## Send a webhook
-
-The code also allows you to send a webhook. Copy `webhook.json` to `webhook.prod.json` and once you have the setup correctly, follow the same steps as above, but use `sendHook` as parameter instead:
-
-```
-npm run-script build
-npm run-script start sendHook
+npm run build
+npm run start
 ```
 
 ## Contributing

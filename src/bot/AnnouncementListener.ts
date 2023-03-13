@@ -1,6 +1,6 @@
-import * as Discord from "discord.js";
+import { Client, Events, GuildChannel, Message, PartialMessage, TextChannel } from "discord.js";
 import * as MySQL from "mysql2/promise";
-import { IBotConfig } from "../api";
+import { IBotConfig } from "../api.js";
 
 export class AnnouncementListener {
     private announcementChannel: string;
@@ -18,8 +18,8 @@ export class AnnouncementListener {
      *
      * @param client Discord client to operate on
      */
-    public async start(client: Discord.Client) {
-        client.on("message", async (message) => {
+    public start(client: Client) {
+        client.on(Events.MessageCreate, async (message) => {
             // if no announcement channel set, don't do anything.
             if (message.channel.id !== this.announcementChannel) {
                 return;
@@ -32,7 +32,7 @@ export class AnnouncementListener {
                 user: this.cfg.dbUser,
             })
             .catch((err) => {
-                throw new Error("Unable to connect to database. " + err);
+                throw new Error("Unable to connect to database. ", { cause: err });
             });
             const announcementMessage = await this.getAnnouncementMessage(message);
             const embedHref = await this.getEmbedHref(message);
@@ -44,11 +44,11 @@ export class AnnouncementListener {
             (await db).execute("INSERT INTO cq_announcements (id, message, author, timestamp, embed_href) VALUES (?, ?, ?, ?, ?)",
                 [message.id, announcementMessage, messageAuthor, message.createdTimestamp, embedHref])
             .catch((err) => {
-                throw new Error("Unable to insert into database: " + err);
+                throw new Error("Unable to insert into database: ", { cause: err });
              });
         });
 
-        client.on("messageDelete", async (deletedMessage) => {
+        client.on(Events.MessageDelete, async (deletedMessage) => {
             // if no announcement channel set, don't do anything.
             if (deletedMessage.channel.id !== this.announcementChannel) {
                 return;
@@ -61,13 +61,13 @@ export class AnnouncementListener {
                 user: this.cfg.dbUser,
             })
             .catch((err) => {
-                throw new Error("Unable to connect to database. " + err);
+                throw new Error("Unable to connect to database. ", { cause: err });
             });
 
-            (await db).execute("DELETE FROM cq_announcements WHERE id = ?", [deletedMessage.id]);
+            await (await db).execute("DELETE FROM cq_announcements WHERE id = ?", [deletedMessage.id]);
         });
 
-        client.on("messageUpdate", async (oldMessage, newMessage) => {
+        client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
             // if no announcement channel set, don't do anything.
             if (newMessage.channel.id !== this.announcementChannel) {
                 return;
@@ -80,7 +80,7 @@ export class AnnouncementListener {
                 user: this.cfg.dbUser,
             })
             .catch((err) => {
-                throw new Error("Unable to connect to database. " + err);
+                throw new Error("Unable to connect to database. ", { cause: err });
             });
             const announcementMessage = await this.getAnnouncementMessage(newMessage);
             const embedHref = await this.getEmbedHref(newMessage);
@@ -88,7 +88,7 @@ export class AnnouncementListener {
             (await db).execute("UPDATE cq_announcements SET message = ?, embed_href = ? WHERE id = ?",
                 [announcementMessage, embedHref, oldMessage.id])
             .catch((err) => {
-                throw new Error("Unable to update database: " + err);
+                throw new Error("Unable to update database: ", { cause: err });
             });
         });
     }
@@ -98,8 +98,8 @@ export class AnnouncementListener {
      *
      * @param message Discord message announcement to parse for contents.
      */
-    private async getAnnouncementMessage(message: Discord.Message | Discord.PartialMessage): Promise<string> {
-        const fullMessage = message.partial ? await message.fetch() : message as Discord.Message;
+    private async getAnnouncementMessage(message: Message | PartialMessage): Promise<string> {
+        const fullMessage = message.partial ? await message.fetch() : message;
 
         // get the message contents
         let announcementMessage = this.parseMessageMentions(fullMessage);
@@ -113,8 +113,8 @@ export class AnnouncementListener {
      *
      * @param message Discord message announcement to parse for a hyperlink.
      */
-    private async getEmbedHref(message: Discord.Message | Discord.PartialMessage): Promise<string | null> {
-        const fullMessage = message.partial ? await message.fetch() : message as Discord.Message;
+    private async getEmbedHref(message: Message | PartialMessage): Promise<string | null> {
+        const fullMessage = message.partial ? await message.fetch() : message;
 
         let embedHref = null;
         // if we have embeds and the url isn't blank, store it
@@ -128,17 +128,20 @@ export class AnnouncementListener {
     /**
      * Parse mentions found in a message that appears to our AnnouncementListener
      *
-     * @param message Discord.Message - Message to parse mentions from
+     * @param message Message - Message to parse mentions from
      * @returns string containing parsed message
      */
-    private parseMessageMentions(message: Discord.Message): string {
+    private parseMessageMentions(message: Message): string {
         let messageParsed: string = message.content;
         const channelMentions = message.mentions.channels;
         const memberMentions = message.mentions.members;
         const roleMentions = message.mentions.roles;
 
         channelMentions.each((channel) => {
-            messageParsed = messageParsed.replace("<#" + channel.id + ">", "#" + channel.name);
+            const guildChannel = channel as GuildChannel | undefined;
+            if (guildChannel) {
+                messageParsed = messageParsed.replace("<#" + guildChannel.id + ">", "#" + guildChannel.name);
+            }
         });
 
         roleMentions.each((role) => {
@@ -162,12 +165,12 @@ export class AnnouncementListener {
      * @param message Discord.Message - Message to parse embeds from
      * @returns string containing parsed embeds to be attached to a message.
      */
-    private parseMessageEmbedMentions(message: Discord.Message): string {
+    private parseMessageEmbedMentions(message: Message): string {
         if (message.embeds.length < 1) {
             return "";
         }
 
-        let embedsParsed: string = "";
+        let embedsParsed = "";
         const clientChannels = message.client.channels.cache;
         const clientMembers = message.guild?.members.cache;
         const clientRoles = message.guild?.roles.cache;
@@ -177,8 +180,8 @@ export class AnnouncementListener {
 
             let embedDescription: string = embed.description as string;
             clientChannels.each((channel) => {
-                if (channel.type === "text") {
-                    const textChannel = channel as Discord.TextChannel;
+                const textChannel = channel as TextChannel;
+                if (textChannel) {
                     embedDescription = embedDescription.replace("<#" + textChannel.id + ">", "#" + textChannel.name);
                 }
             });

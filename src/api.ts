@@ -1,12 +1,8 @@
-import * as Discord from "discord.js";
-
-export type WebHookOptions = Discord.MessageAdditions |
-  (Discord.WebhookMessageOptions & { split?: false | undefined; });
+import { ChatInputCommandInteraction, HexColorString, SharedNameAndDescription, SlashCommandBuilder } from "discord.js";
 
 export interface IBotConfig {
-  commandPrefix: string;
+  clientId: string;
   token: string;
-  owner?: string | string[] | Set<string>;
   activity?: string;
   listenChannel?: string;
   db?: string;
@@ -14,23 +10,29 @@ export interface IBotConfig {
   dbPassword?: string;
 }
 
+export interface IRuleConfig {
+  readonly sections: IRuleSection[];
+}
+
+export interface IRuleSection {
+  readonly title: string;
+  readonly description: string;
+  readonly color: HexColorString;
+}
+
 export interface IBotCommand {
-  name: string;
-  helpText?: string;
-  execute(message: Discord.Message): void;
+  readonly data: ISerializableSlashCommand;
+  execute(interaction: ChatInputCommandInteraction): Promise<void>;
 }
 
-export interface IWebhookConfig {
-  id: string;
-  token: string;
-  message: Discord.StringResolvable;
-  messageOptions?: Discord.MessageAdditions;
-}
+export interface ISerializableSlashCommand extends SharedNameAndDescription, Pick<SlashCommandBuilder, "toJSON"> {}
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ILoggerMethod {
   (msg: string, ...args: any[]): void;
   (obj: object, msg?: string, ...args: any[]): void;
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export interface ILogger {
   debug: ILoggerMethod;
