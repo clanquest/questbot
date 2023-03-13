@@ -20,7 +20,13 @@ export class QuestBot {
   public async start() {
     logger.info("Starting bot...");
 
-    this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    this.client = new Client({
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessages
+      ]
+    });
     this.commands = this.collectCommands();
 
     this.client.on(Events.ClientReady, async () => {
