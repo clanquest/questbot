@@ -1,5 +1,5 @@
 import { Client, Events, GuildChannel, Message, PartialMessage, TextChannel } from "discord.js";
-import * as MySQL from "mysql2/promise";
+import { createConnection, Connection } from "mysql2/promise";
 import { IBotConfig } from "../api.js";
 
 export class AnnouncementListener {
@@ -25,15 +25,7 @@ export class AnnouncementListener {
                 return;
             }
 
-            const db = MySQL.createConnection({
-                database: this.cfg.db,
-                host: "localhost",
-                password: this.cfg.dbPassword,
-                user: this.cfg.dbUser,
-            })
-            .catch((err) => {
-                throw new Error("Unable to connect to database. ", { cause: err });
-            });
+
             const announcementMessage = await this.getAnnouncementMessage(message);
             const embedHref = await this.getEmbedHref(message);
             let messageAuthor = null;
@@ -41,11 +33,13 @@ export class AnnouncementListener {
                 messageAuthor = message.member.nickname ? message.member.nickname : message.author.username;
             }
 
-            (await db).execute("INSERT INTO cq_announcements (id, message, author, timestamp, embed_href) VALUES (?, ?, ?, ?, ?)",
-                [message.id, announcementMessage, messageAuthor, message.createdTimestamp, embedHref])
-            .catch((err) => {
+            const db = await this.createDbConnection();
+            try {
+                await db.execute("INSERT INTO cq_announcements (id, message, author, timestamp, embed_href) VALUES (?, ?, ?, ?, ?)",
+                    [message.id, announcementMessage, messageAuthor, message.createdTimestamp, embedHref]);
+            } catch(err) {
                 throw new Error("Unable to insert into database: ", { cause: err });
-             });
+            }
         });
 
         client.on(Events.MessageDelete, async (deletedMessage) => {
@@ -54,17 +48,8 @@ export class AnnouncementListener {
                 return;
             }
 
-            const db = MySQL.createConnection({
-                database: this.cfg.db,
-                host: "localhost",
-                password: this.cfg.dbPassword,
-                user: this.cfg.dbUser,
-            })
-            .catch((err) => {
-                throw new Error("Unable to connect to database. ", { cause: err });
-            });
-
-            await (await db).execute("DELETE FROM cq_announcements WHERE id = ?", [deletedMessage.id]);
+            const db = await this.createDbConnection();
+            await db.execute("DELETE FROM cq_announcements WHERE id = ?", [deletedMessage.id]);
         });
 
         client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
@@ -73,24 +58,31 @@ export class AnnouncementListener {
                 return;
             }
 
-            const db = MySQL.createConnection({
+            const db = await this.createDbConnection();
+            const announcementMessage = await this.getAnnouncementMessage(newMessage);
+            const embedHref = await this.getEmbedHref(newMessage);
+
+            try {
+                db.execute("UPDATE cq_announcements SET message = ?, embed_href = ? WHERE id = ?",
+                    [announcementMessage, embedHref, oldMessage.id])
+            } catch(err) {
+                throw new Error("Unable to update database: ", { cause: err });
+            }
+        });
+    }
+
+    private async createDbConnection(): Promise<Connection> {
+        try {
+            return await createConnection({
                 database: this.cfg.db,
                 host: "localhost",
                 password: this.cfg.dbPassword,
                 user: this.cfg.dbUser,
-            })
-            .catch((err) => {
-                throw new Error("Unable to connect to database. ", { cause: err });
             });
-            const announcementMessage = await this.getAnnouncementMessage(newMessage);
-            const embedHref = await this.getEmbedHref(newMessage);
-
-            (await db).execute("UPDATE cq_announcements SET message = ?, embed_href = ? WHERE id = ?",
-                [announcementMessage, embedHref, oldMessage.id])
-            .catch((err) => {
-                throw new Error("Unable to update database: ", { cause: err });
-            });
-        });
+        }
+        catch (err) {
+            throw new Error("Unable to connect to database. ", { cause: err });
+        }
     }
 
     /**
