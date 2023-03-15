@@ -63,7 +63,7 @@ export class AnnouncementListener {
             const embedHref = await this.getEmbedHref(newMessage);
 
             try {
-                db.execute("UPDATE cq_announcements SET message = ?, embed_href = ? WHERE id = ?",
+                await db.execute("UPDATE cq_announcements SET message = ?, embed_href = ? WHERE id = ?",
                     [announcementMessage, embedHref, oldMessage.id])
             } catch(err) {
                 throw new Error("Unable to update database: ", { cause: err });
