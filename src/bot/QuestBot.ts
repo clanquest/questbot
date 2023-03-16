@@ -24,7 +24,8 @@ export class QuestBot {
       intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessages
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
       ]
     });
     this.commands = this.collectCommands();
