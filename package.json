@@ -27,7 +27,7 @@
     "eslint": "^8.36.0",
     "eslint-plugin-jsdoc": "^40.0.2",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "typescript": "^4.9.5"
+    "typescript": "^5.0.2"
   },
   "dependencies": {
     "@commander-js/extra-typings": "github:commander-js/extra-typings",
