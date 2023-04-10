@@ -33,7 +33,7 @@
     "@commander-js/extra-typings": "github:commander-js/extra-typings",
     "@keyv/sqlite": "^3.6.5",
     "commander": "^10.0.0",
-    "discord.js": "^14.7.1",
+    "discord.js": "^14.9.0",
     "keyv": "^4.5.2",
     "mysql2": "^2.3.3"
   }
