@@ -75,7 +75,7 @@ export class AnnouncementListener {
         try {
             return await createConnection({
                 database: this.cfg.db,
-                host: "localhost",
+                host: "127.0.0.1",
                 password: this.cfg.dbPassword,
                 user: this.cfg.dbUser,
             });
