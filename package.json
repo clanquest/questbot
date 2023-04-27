@@ -19,7 +19,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^18.15.11",
+    "@types/node": "^18.16.1",
     "@types/node-fetch": "^2.6.3",
     "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
