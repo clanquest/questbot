@@ -142,7 +142,7 @@ export class AnnouncementListener {
 
         if (memberMentions) {
             memberMentions.each((member) => {
-                const nickname = member.nickname === null ? member.user.username : member.nickname;
+                const nickname = member?.nickname ?? member.user.username;
                 messageParsed = messageParsed.replace("<@" + member.id + ">", "@" + member.user.username);
                 messageParsed = messageParsed.replace("<@!" + member.id + ">", "@" + nickname);
             });
@@ -170,7 +170,7 @@ export class AnnouncementListener {
         message.embeds.forEach((embed, index) => {
             embedsParsed += index > 0 ? "\n\n" : "";
 
-            let embedDescription: string = embed.description as string;
+            let embedDescription: string = embed.description!;
             clientChannels.each((channel) => {
                 const textChannel = channel as TextChannel;
                 if (textChannel) {
@@ -180,7 +180,7 @@ export class AnnouncementListener {
 
             if (message.guild) { // if the message was sent from a guild get the member and role mentions
                 clientMembers?.each((member) => {
-                    const nickname = member.nickname === null ? member.user.username : member.nickname;
+                    const nickname = member?.nickname ?? member.user.username;
                     embedDescription = embedDescription.replace("<@" + member.id + ">", "@" + member.user.username);
                     embedDescription = embedDescription.replace("<@!" + member.id + ">", "@" + nickname);
                 });

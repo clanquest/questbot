@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint -c .eslintrc.cjs --ext .ts src/",
+    "fix": "eslint --fix -c .eslintrc.cjs --ext .ts src/",
     "watch": "tsc -w",
     "clean": "tsc --build --clean",
     "build": "npm run clean && tsc --build",
@@ -22,15 +23,15 @@
     "@types/node": "^20.6.2",
     "@types/node-fetch": "^2.6.4",
     "@types/ws": "^8.5.5",
-    "@typescript-eslint/eslint-plugin": "^5.61.0",
-    "@typescript-eslint/parser": "^5.62.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
     "eslint": "^8.49.0",
     "eslint-plugin-jsdoc": "^46.5.1",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@commander-js/extra-typings": "github:commander-js/extra-typings",
+    "@commander-js/extra-typings": "^10.0.3",
     "@keyv/sqlite": "^3.6.5",
     "commander": "^10.0.1",
     "discord.js": "^14.13.0",

@@ -58,7 +58,7 @@ export class QuestBot {
     this.client.user?.setStatus("online");
 
     const notifyChannel = await keyv.get(notifyChannelKey) as string | undefined;
-    if (notifyChannel && notifyChannel.length) {
+    if (notifyChannel?.length) {
       const channel = (await this.client.channels.fetch(notifyChannel)) as TextChannel;
       await channel?.send("QuestBot has successfully (re)started");
     }

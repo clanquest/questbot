@@ -11,7 +11,7 @@ export class Announcement {
     return Announcement.instances.get(guild.id);
   }
 
-  private static instances: Map<string, Announcement> = new Map();
+  private static instances = new Map<string, Announcement>();
 
   public startInteraction?: ChatInputCommandInteraction;
 
