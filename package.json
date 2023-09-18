@@ -31,9 +31,9 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@commander-js/extra-typings": "^10.0.3",
+    "@commander-js/extra-typings": "^11.0.0",
     "@keyv/sqlite": "^3.6.5",
-    "commander": "^10.0.1",
+    "commander": "^11.0.0",
     "discord.js": "^14.13.0",
     "keyv": "^4.5.3",
     "mysql2": "^3.6.1"
