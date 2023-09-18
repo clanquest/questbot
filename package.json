@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint -c .eslintrc.cjs --ext .ts src/",
+    "fix": "eslint --fix -c .eslintrc.cjs --ext .ts src/",
     "watch": "tsc -w",
     "clean": "tsc --build --clean",
     "build": "npm run clean && tsc --build",
