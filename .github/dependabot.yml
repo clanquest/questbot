@@ -8,3 +8,8 @@ updates:
       prefix: "⬆"
     reviewers:
       - "tomrijnbeek"
+    groups:
+      production-deps:
+        dependency-type: "production"
+      development-deps:
+        dependency-type: "development"
