@@ -20,15 +20,15 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.9.2",
+    "@types/node": "^20.10.0",
     "@types/node-fetch": "^2.6.9",
-    "@types/ws": "^8.5.9",
-    "@typescript-eslint/eslint-plugin": "^6.11.0",
-    "@typescript-eslint/parser": "^6.11.0",
+    "@types/ws": "^8.5.10",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
     "eslint": "^8.54.0",
     "eslint-plugin-jsdoc": "^46.9.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   },
   "dependencies": {
     "@commander-js/extra-typings": "^11.1.0",
