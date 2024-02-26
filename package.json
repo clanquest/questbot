@@ -20,13 +20,13 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.11.19",
+    "@types/node": "^20.11.20",
     "@types/node-fetch": "^2.6.11",
     "@types/ws": "^8.5.10",
-    "@typescript-eslint/eslint-plugin": "^7.0.1",
-    "@typescript-eslint/parser": "^7.0.1",
-    "eslint": "^8.56.0",
-    "eslint-plugin-jsdoc": "^48.1.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-jsdoc": "^48.2.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "typescript": "^5.3.3"
   },
